@@ -12,8 +12,6 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     @IBOutlet weak var segm: UISegmentedControl!
     @IBOutlet weak var menuContainer: UIView!
-    @IBOutlet weak var commentContainer: UIView!
-    @IBOutlet weak var commentTableView: UITableView!
     @IBOutlet weak var restaurantImage: UIImageView!//餐廳圖片
     @IBOutlet weak var restaurantDetailTable: UITableView!//餐廳資料的table
     
@@ -46,15 +44,13 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
                         
                     }
                     
-                    self.commentTableView.reloadData()
+                    self.restaurantDetailTable.reloadData()
                 }
             }
             
         }
         task.resume()
         
-        commentTableView.dataSource = self
-        commentTableView.delegate = self
         
         if restaurant.ResImage != nil {
             let url_restaurant = URL(string: restaurant.ResImage!)
@@ -78,25 +74,25 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
         super.didReceiveMemoryWarning()
     }
     
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.item < 6{
+            return 40.0
+        }
+        return 90.0
+    }
     
     
     //cell的數量
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == restaurantDetailTable {
-            return 6
-        }
-        else if tableView == commentTableView{
-            return commentArray.count
-        }
-        return 0
+        
+        return 6 + commentArray.count
         
     }
     
     //顯示table的內容
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = restaurantDetailTable.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! restaurantDetailCell
-        if tableView == restaurantDetailTable{
+        
+        if indexPath.item < 6 {
             let cell = restaurantDetailTable.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! restaurantDetailCell
             
             switch indexPath.row{
@@ -126,15 +122,13 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
             return cell
         }
         
-        else if tableView == commentTableView{
-            let comment = commentArray[indexPath.item]
-            let cell = commentTableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as! commentCell
-            cell.commentID.text = "\(comment.create_UserID)"
-            cell.commentStar.rating = comment.Score
+        let comment = commentArray[indexPath.item - 6]
+        let cell = restaurantDetailTable.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as! commentCell
+        cell.commentID.text = "\(comment.create_UserID)"
+        cell.commentStar.rating = comment.Score
+        
             
-            return cell
-            
-        }
+        
         
         return cell
         
@@ -158,9 +152,9 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
             
         }
         else if segue.identifier == "commentSegue" {
-            if let indexPath = commentTableView.indexPathForSelectedRow {
+            if let indexPath = restaurantDetailTable.indexPathForSelectedRow {
                 let destinationController = segue.destination as! commentDetail
-                destinationController.commentData = commentArray[indexPath.row]
+                destinationController.commentData = commentArray[indexPath.row - 6]
             }
         }
         
@@ -168,19 +162,18 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBAction func segmAction(_ sender: Any) {
         if segm.selectedSegmentIndex == 0{
             restaurantDetailTable.isHidden = false
-            commentTableView.isHidden = true
-            commentContainer.isHidden = true
+            
+            
             menuContainer.isHidden = true
         }
         else if segm.selectedSegmentIndex == 1{
             restaurantDetailTable.isHidden = true
-            commentTableView.isHidden = false
-            //commentContainer.isHidden = false
+            
             menuContainer.isHidden = true
         }
         else if segm.selectedSegmentIndex == 2{
             restaurantDetailTable.isHidden = true
-            commentContainer.isHidden = true
+            
             menuContainer.isHidden = false
         }
         
