@@ -77,7 +77,7 @@ class loginAction :UIViewController, UITextFieldDelegate{
                 self.present(main!, animated: false, completion: nil)
             }
             else{
-                let main = self.storyboard?.instantiateViewController(withIdentifier: "showMenu")
+                let main = self.storyboard?.instantiateViewController(withIdentifier: "storeMenu")
                 self.present(main!, animated: false, completion: nil)
             }
             

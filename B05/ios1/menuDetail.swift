@@ -10,8 +10,8 @@ import UIKit
 class menuDetail:UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UITextViewDelegate,UITextFieldDelegate{
     
     
-//Basic Init Item
-
+    //Basic Init Item
+    
     @IBOutlet weak var field_Name: UITextField!
     @IBOutlet weak var field_Price: UITextField!
     @IBOutlet weak var field_Total: UITextField!
@@ -20,6 +20,7 @@ class menuDetail:UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UI
     @IBOutlet weak var field_aft: UITextField!
     @IBOutlet weak var field_even: UITextField!
     @IBOutlet weak var field_visable: UITextField!
+    
     var updUrl :String = "";
     var status = [String]()
     var type:String!
@@ -34,16 +35,16 @@ class menuDetail:UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UI
     var MenuDetail:Menu!
     
     
-//Init Menu's Detail From Present Page
-//Writer : Niguai
-//Last UpdUser:Niguai
+    //Init Menu's Detail From Present Page
+    //Writer : Niguai
+    //Last UpdUser:Niguai
     override func viewDidLoad() {
-        
+        print(AccountData.user_ID)
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(assignAccoutAction.donePressd))
         toolBar.setItems([doneButton], animated: false)
-
+        
         if(self.type == "U"){
             field_Name.text = MenuDetail.name
             field_Price.text = String(describing: MenuDetail.price)
@@ -54,11 +55,11 @@ class menuDetail:UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UI
             field_even.text = MenuDetail.order_even
             field_visable.text = MenuDetail.visable
         }
-
+        
         pick.dataSource = self
         pick.delegate = self
         pick.showsSelectionIndicator = true
-
+        
         field_TakeOut.inputView = pick
         field_TakeOut.delegate = self
         field_mor.inputView = pick
@@ -75,30 +76,30 @@ class menuDetail:UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UI
         field_aft.inputAccessoryView = toolBar
         field_even.inputAccessoryView = toolBar
         field_visable.inputAccessoryView = toolBar
-
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(menuDetail.hideKeyboard(tapG:)))
         tap.cancelsTouchesInView = false
         // 加在最基底的 self.view 上
         self.view.addGestureRecognizer(tap)
         
-
+        
         
     }
     
     
-//Update Menu's Detail
-//Writer : Niguai
-//Last UpdUser:Niguai
+    //Update Menu's Detail
+    //Writer : Niguai
+    //Last UpdUser:Niguai
     @IBAction func updAction(_ sender: Any) {
         
         if(self.type == "U"){
-            updUrl =  "http://140.136.150.95:3000/menu/update?storeID=\(MenuDetail.storeID)&dishName=\(field_Name.text!)&dishPrice=\(field_Price.text!)&dishTotal=\(field_Total.text!)&takeOut=\(field_TakeOut.text!)&order_moring=\(field_mor.text!)&order_afternoon=\(field_aft.text!)&order_evening=\(field_even.text!)&visable=\(field_visable.text!)&menuID=\(MenuDetail.menuID)"
+            updUrl =  "http://140.136.150.95:3000/menu/update?storeID=\(AccountData.user_ID)&dishName=\(field_Name.text!)&dishPrice=\(field_Price.text!)&dishTotal=\(field_Total.text!)&takeOut=\(field_TakeOut.text!)&order_moring=\(field_mor.text!)&order_afternoon=\(field_aft.text!)&order_evening=\(field_even.text!)&visable=\(field_visable.text!)&menuID=\(MenuDetail.menuID)"
             print(updUrl)
             let urlStr = updUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
             let url = URL(string:urlStr!)
             let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
                 if let data = data, let _ = String(data: data, encoding: .utf8) {
-                
+                    
                 }
             }
             task.resume()
@@ -132,18 +133,19 @@ class menuDetail:UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UI
                 check = 0
             }
             if(check != 0){
-                insertUrl = "http://140.136.150.95:3000/menu/add?storeID=\(MenuDetail.storeID)&dishName=\(field_Name.text!)&dishPrice=\(field_Price.text!)&dishTotal=\(field_Total.text!)&takeOut=\(field_TakeOut.text!)&order_moring=\(field_mor.text!)&order_afternoon=\(field_aft.text!)&order_evening=\(field_even.text!)&visable=\(field_visable.text!)"
+                insertUrl = "http://140.136.150.95:3000/menu/add?storeID=\(AccountData.user_ID)&dishName=\(field_Name.text!)&dishPrice=\(field_Price.text!)&dishTotal=\(field_Total.text!)&takeOut=\(field_TakeOut.text!)&order_moring=\(field_mor.text!)&order_afternoon=\(field_aft.text!)&order_evening=\(field_even.text!)&visable=\(field_visable.text!)"
                 let urlStr = insertUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
                 let url = URL(string:urlStr!)
                 let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
                     if let data = data, let _ = String(data: data, encoding: .utf8) {
-                        //self.status = [content]
-                        //print(self.status)
                     }
                 }
                 task.resume()
                 
-                self.navigationController?.popViewController(animated: true)
+                let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { (timer) in
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+                
             }else{
                 self.Message(titleText: "錯誤", messageText: "欄位不得為空")
             }
@@ -218,7 +220,7 @@ class menuDetail:UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UI
         }else{
             statusStr = "";
         }
-    
+        
         
     }
     
@@ -251,5 +253,12 @@ class menuDetail:UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UI
     }
     
     
+    //Prepare
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+
+    }
+    
+    
     
 }
+

@@ -12,21 +12,24 @@ import UIKit
 class storeMenu:UITableViewController{
     
     var menuArray = [Menu]();
-    var menuUrl =  "http://140.136.150.95:3000/menu/detail?storeID=1";
+    var menuUrl =  "http://140.136.150.95:3000/menu/detail/store?storeID=\(AccountData.user_ID)";
     var index = 0;
     var status :String!
     
     override func viewDidLoad() {
-        //super.viewDidLoad()
-        viewWillAppear(true)
+        
+        //viewWillAppear(true)
+        
     }
     
     
-//Qry Menu Detail From DataBase
-//Writer : Niguai
-//Last UpdUser:Niguai
+    //Qry Menu Detail From DataBase
+    //Writer : Niguai
+    //Last UpdUser:Niguai
     override func viewWillAppear(_ animated: Bool) {
+        
         menuArray.removeAll()
+        self.tableView.reloadData()
         let urlStr = menuUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
         let url = URL(string:urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
@@ -60,26 +63,26 @@ class storeMenu:UITableViewController{
         super.didReceiveMemoryWarning()
     }
     
-        
-//table的cell數量
-//Writer : Niguai
-//Last UpdUser:Niguai
+    
+    //table的cell數量
+    //Writer : Niguai
+    //Last UpdUser:Niguai
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return menuArray.count
     }
     
     
-//自訂tableView高度
-//Writer : Niguai
-//Last UpdUser:Niguai
+    //自訂tableView高度
+    //Writer : Niguai
+    //Last UpdUser:Niguai
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
         return 100.0;
     }
     
     
-//顯示table的內容
-//Writer : Niguai
-//Last UpdUser:Niguai
+    //顯示table的內容
+    //Writer : Niguai
+    //Last UpdUser:Niguai
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let menu = menuArray[indexPath.item];
@@ -99,9 +102,9 @@ class storeMenu:UITableViewController{
     }
     
     
-//編輯按鈕並跳轉至下一頁面
-//Writer : Niguai
-//Last UpdUser:Niguai
+    //編輯按鈕並跳轉至下一頁面
+    //Writer : Niguai
+    //Last UpdUser:Niguai
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         let shareAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "編輯", handler: { (action, indexPath) -> Void in
@@ -126,7 +129,9 @@ class storeMenu:UITableViewController{
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "menuUpdate" {
             let destinationController = segue.destination as! menuDetail
-            destinationController.MenuDetail = self.menuArray[self.index]
+            if(self.status == "U"){
+                destinationController.MenuDetail = self.menuArray[self.index]
+            }
             destinationController.type = self.status
         }
     }
@@ -166,3 +171,4 @@ class menuCell:UITableViewCell{
     }
     
 }
+
