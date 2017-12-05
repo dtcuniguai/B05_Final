@@ -21,10 +21,11 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     var commentArray = [resComment]()
     
     override func viewDidLoad() {
+        
+        addClicker()
         segm.selectedSegmentIndex = 0
         super.viewDidLoad()
-        let urlStr = "http:140.136.150.95:3000/comment/show/store?storeID=\(restaurant.ResID)".addingPercentEncoding(withAllowedCharacters:
-            .urlQueryAllowed)
+        let urlStr = "http:140.136.150.95:3000/comment/show/store?storeID=\(restaurant.ResID)".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
         let url = URL(string:urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
@@ -39,7 +40,6 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
                                                  Score_Envir: commentData["Score_Envir"] as! Double,
                                                  Score_Taste: commentData["Score_Taste"] as! Double,
                                                  Score_Service: commentData["Score_Service"] as! Double
-                                                 
                                                  );
                         self.commentArray.append(commentObj);
                         
@@ -202,6 +202,45 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
         mapItem.openInMaps(launchOptions: options)
         
     }
+    
+    func addClicker(){
+        print(restaurant.ResID)
+        let addUrl = "140.136.150.95:3000/click?storeID=\(restaurant.ResID)"
+        let urlStr = addUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
+        let url = URL(string:urlStr!)
+        let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+            if let data = data, let _ = String(data: data, encoding: .utf8) {
+            }
+        }
+        task.resume()
+        
+        
+    }
+    
+    
+}
+
+
+
+class restaurantDetailCell: UITableViewCell {
+    
+    @IBOutlet var mapButton: UIButton!//地圖按鈕
+    @IBOutlet var fieldLabel: UILabel!//欄位名稱
+    @IBOutlet var valueLabel: UILabel!//欄位內容
+    @IBOutlet var detailImage: UIImageView!//圖片
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        
+        // Configure the view for the selected state
+    }
+    
     
 }
 

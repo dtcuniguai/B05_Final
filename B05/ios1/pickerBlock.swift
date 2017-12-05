@@ -84,6 +84,14 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
         self.ResTypeTextField.inputAccessoryView = toolBar
         self.sort.inputView = pick
         self.sort.inputAccessoryView = toolBar
+        
+        self.districtTextField.isUserInteractionEnabled = false
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(pickerBlock.hideKeyboard(tapG:)))
+        tap.cancelsTouchesInView = false
+        // 加在最基底的 self.view 上
+        self.view.addGestureRecognizer(tap)
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -221,7 +229,11 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
         if countRow == city.count{
             
             self.cityTextField.text = self.city[row]
-            
+            if(self.cityTextField.text == ""){
+                self.districtTextField.isUserInteractionEnabled = false
+            }else{
+                self.districtTextField.isUserInteractionEnabled = true
+            }
             self.districtTextField.text = ""
             //pick.isHidden = true
             
@@ -332,71 +344,11 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
     }
     
     
-   /* func startRecording() {
-        
-        
-        if recognitionTask != nil {
-            recognitionTask?.cancel()
-            recognitionTask = nil
-        }
-        
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(AVAudioSessionCategoryRecord)
-            try audioSession.setMode(AVAudioSessionModeMeasurement)
-            try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
-        } catch {
-            print("audioSession properties weren't set because of an error.")
-        }
-        
-        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
-        
-        guard  let inputNode = audioEngine.inputNode else {
-            fatalError("Audio engine has no input node")
-        }
-        
-        guard let recognitionRequest = recognitionRequest else {
-            fatalError("Unable to create an SFSpeechAudioBufferRecognitionRequest object")
-        }
-        
-        recognitionRequest.shouldReportPartialResults = true
-        
-        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest, resultHandler: { (result, error) in
-            
-            var isFinal = false
-            
-            if result != nil {
-                
-                self.textSearchTextField.text = result?.bestTranscription.formattedString
-                isFinal = (result?.isFinal)!
-            }
-            
-            if error != nil || isFinal {
-                self.audioEngine.stop()
-                inputNode.removeTap(onBus: 0)
-                
-                self.recognitionRequest = nil
-                self.recognitionTask = nil
-                
-                self.mic.isEnabled = true
-            }
-        })
-        
-        let recordingFormat = inputNode.outputFormat(forBus: 0)
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, when) in
-            self.recognitionRequest?.append(buffer)
-        }
-        
-        audioEngine.prepare()
-        
-        do {
-            try audioEngine.start()
-        } catch {
-            print("audioEngine couldn't start because of an error.")
-        }
-        
-        //textSearchTextField.text = "Say something, I'm listening!"
-        
-    }*/
+    @objc func hideKeyboard(tapG:UITapGestureRecognizer){
+        self.view.endEditing(true)
+    }
+    
+    
+    
     
 }

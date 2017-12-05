@@ -25,7 +25,6 @@
 		DEA5C7D51F8BB202003BC64F /* map.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA5C7D41F8BB202003BC64F /* map.swift */; };
 		DEA5C7DF1F8BD546003BC64F /* textSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA5C7DE1F8BD546003BC64F /* textSearch.swift */; };
 		DEF586531F8C9E170053D715 /* restaurantDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF586521F8C9E170053D715 /* restaurantDetail.swift */; };
-		DEF586551F8CA5320053D715 /* restaurantDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF586541F8CA5320053D715 /* restaurantDetailCell.swift */; };
 		FE24B6F91FA967440055EA3E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE24B6F81FA9672E0055EA3E /* CoreLocation.framework */; };
 		FE5DC5FD1FB7284B005DF53C /* userShowComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE5DC5FC1FB7284B005DF53C /* userShowComment.swift */; };
 		FE616F8B1FB4A14300A65B48 /* accountComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE616F8A1FB4A14300A65B48 /* accountComment.swift */; };
@@ -62,7 +61,6 @@
 		DEA5C7D41F8BB202003BC64F /* map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = map.swift; sourceTree = "<group>"; };
 		DEA5C7DE1F8BD546003BC64F /* textSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textSearch.swift; sourceTree = "<group>"; };
 		DEF586521F8C9E170053D715 /* restaurantDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = restaurantDetail.swift; sourceTree = "<group>"; };
-		DEF586541F8CA5320053D715 /* restaurantDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = restaurantDetailCell.swift; sourceTree = "<group>"; };
 		FE24B6F81FA9672E0055EA3E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		FE5DC5FC1FB7284B005DF53C /* userShowComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = userShowComment.swift; sourceTree = "<group>"; };
 		FE616F8A1FB4A14300A65B48 /* accountComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = accountComment.swift; sourceTree = "<group>"; };
@@ -126,7 +124,6 @@
 				0EB497841F8AA33D0063FEDF /* pickerBlock.swift */,
 				DEA5C7DE1F8BD546003BC64F /* textSearch.swift */,
 				DEF586521F8C9E170053D715 /* restaurantDetail.swift */,
-				DEF586541F8CA5320053D715 /* restaurantDetailCell.swift */,
 				0E280FF51F61911500B62A84 /* Assets.xcassets */,
 				0E280FF71F61911500B62A84 /* LaunchScreen.storyboard */,
 				0E280FFA1F61911500B62A84 /* Info.plist */,
@@ -305,7 +302,6 @@
 				FE76AAF11FB7198F009F4E7E /* userCommentCell.swift in Sources */,
 				DEA5C7D51F8BB202003BC64F /* map.swift in Sources */,
 				DEF586531F8C9E170053D715 /* restaurantDetail.swift in Sources */,
-				DEF586551F8CA5320053D715 /* restaurantDetailCell.swift in Sources */,
 				FEC080091F965433002981B3 /* upAccoutData.swift in Sources */,
 				0E3709841FC020C0006385E0 /* userMenu.swift in Sources */,
 				FEE8EE0F1FB6EBD800533D89 /* commentCell.swift in Sources */,
