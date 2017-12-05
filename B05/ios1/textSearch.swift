@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseDatabase
 
+
 class textSearch: UITableViewController {
     
     
@@ -116,4 +117,5 @@ class textSearch: UITableViewController {
             }
         }
     }
+    
 }

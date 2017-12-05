@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import CoreLocation
+import MapKit
 
 class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -14,7 +16,7 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var menuContainer: UIView!
     @IBOutlet weak var restaurantImage: UIImageView!//餐廳圖片
     @IBOutlet weak var restaurantDetailTable: UITableView!//餐廳資料的table
-    
+    git
     var restaurant: Restaurant!
     
     var commentArray = [resComment]()
@@ -61,6 +63,7 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
         title = restaurant.Name
         AccountData.res_ID = restaurant.ResID
 
+        
     }
 
     
@@ -76,7 +79,11 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.item < 6{
+            if indexPath.item == 5{
+                return 90.0
+            }
             return 40.0
+            
         }
         return 90.0
     }
@@ -146,19 +153,15 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     //傳遞資料至Map和commentDetail
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "DetailGoToMap" {
-            let destinationController = segue.destination as! map
-            destinationController.restaurant = restaurant
-            
-        }
-        else if segue.identifier == "commentSegue" {
+         if segue.identifier == "commentSegue" {
             if let indexPath = restaurantDetailTable.indexPathForSelectedRow {
                 let destinationController = segue.destination as! commentDetail
                 destinationController.commentData = commentArray[indexPath.row - 6]
             }
         }
-        
     }
+    
+    
     @IBAction func segmAction(_ sender: Any) {
         if segm.selectedSegmentIndex == 0{
             restaurantDetailTable.isHidden = false
@@ -176,6 +179,28 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             menuContainer.isHidden = false
         }
+        
+    }
+    
+   
+    @IBAction func gotoMap(_ sender: Any) {
+        
+        let latitude: CLLocationDegrees = restaurant.Res_Y
+        let longitude: CLLocationDegrees = restaurant.Res_X
+        
+        let regionDistance:CLLocationDistance = 10000
+        let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
+        let regionSpan = MKCoordinateRegionMakeWithDistance(coordinates, regionDistance, regionDistance)
+        
+        let options = [
+            MKLaunchOptionsMapCenterKey: NSValue(mkCoordinate: regionSpan.center),
+            MKLaunchOptionsMapSpanKey: NSValue(mkCoordinateSpan: regionSpan.span)
+        ]
+        
+        let placemark = MKPlacemark(coordinate: coordinates, addressDictionary: nil)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItem.name = restaurant?.Name
+        mapItem.openInMaps(launchOptions: options)
         
     }
     

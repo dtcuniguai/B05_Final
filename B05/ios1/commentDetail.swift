@@ -15,10 +15,8 @@ class commentDetail: UIViewController {
     @IBOutlet weak var serviceStar: CosmosView!
     @IBOutlet weak var tasteStar: CosmosView!
     @IBOutlet weak var envirStar: CosmosView!
+    
     @IBOutlet weak var memoLable: UILabel!
-    @IBOutlet weak var image3: UIImageView!
-    @IBOutlet weak var image2: UIImageView!
-    @IBOutlet weak var image1: UIImageView!
     
     var commentData: resComment!
     

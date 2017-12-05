@@ -84,6 +84,7 @@ struct AccountData {
     static var user_Pic:String = ""
     static var res_ID: Int = 0
     
+    
 }
 
 
@@ -100,6 +101,7 @@ class pinMapAnnotation: NSObject, MKAnnotation{
         self.title = title
         self.subtitle = subtitle
         self.coordinate = coordinate
+        
     }
 }
 
@@ -136,4 +138,6 @@ struct Orderlist {
     var menuID: Int
     var updateValue: Int
 }
+
+
 

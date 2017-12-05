@@ -52,8 +52,6 @@ class accountDetail:UIViewController{
             self.account = Data_email
             self.password = Data_password
             
-            print(self.account)
-            print(self.password)
             
             let urlStr = "http://140.136.150.95:3000/user/login?account=\(self.account)&password=\(self.password)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
             let url = URL(string: urlStr!)
@@ -62,7 +60,7 @@ class accountDetail:UIViewController{
                     DispatchQueue.main.async {
                         for userData in dic{
                             self.ID = userData["user_ID"]! as! Int
-                            print(self.ID)
+                           
                             self.userDataArray["user_Account"] = userData["user_Account"] as? String
                             self.userDataArray["Name"] = userData["user_Name"] as? String
                             self.userDataArray["user_Type"] = userData["user_Type"] as? String
@@ -89,7 +87,7 @@ class accountDetail:UIViewController{
         })
         
         
-        
+        self.navigationItem.setHidesBackButton(true, animated: false)
         
         
     }

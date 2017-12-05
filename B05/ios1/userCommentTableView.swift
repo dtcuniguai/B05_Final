@@ -14,7 +14,15 @@ class userCommentTableView: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        userCommentArray.removeAll()
+        self.tableView.reloadData()
         let urlStr = "http:140.136.150.95:3000/comment/show/user?userID=\(AccountData.user_ID)".addingPercentEncoding(withAllowedCharacters:
             .urlQueryAllowed)
         let url = URL(string:urlStr!)
@@ -24,15 +32,15 @@ class userCommentTableView: UITableViewController {
                     for commentData in dic {
                         
                         let commentObj = userComment(ID: commentData["ID"] as! Int,
-                                                 create_UserID: commentData["create_UserID"] as! Int,
-                                                 StoreID: commentData["storeID"] as! Int,
-                                                 storeName: commentData["Name"] as! String,
-                                                 Memo: commentData["Memo"] as! String,
-                                                 Score: commentData["Score"] as! Double,
-                                                 Score_Envir: commentData["Score_Envir"] as! Double,
-                                                 Score_Taste: commentData["Score_Taste"] as! Double,
-                                                 Score_Service: commentData["Score_Service"] as! Double
-                                                 
+                                                     create_UserID: commentData["create_UserID"] as! Int,
+                                                     StoreID: commentData["storeID"] as! Int,
+                                                     storeName: commentData["Name"] as! String,
+                                                     Memo: commentData["Memo"] as! String,
+                                                     Score: commentData["Score"] as! Double,
+                                                     Score_Envir: commentData["Score_Envir"] as! Double,
+                                                     Score_Taste: commentData["Score_Taste"] as! Double,
+                                                     Score_Service: commentData["Score_Service"] as! Double
+                            
                         );
                         self.userCommentArray.append(commentObj);
                         
@@ -44,9 +52,6 @@ class userCommentTableView: UITableViewController {
             
         }
         task.resume()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
     }
 
     override func didReceiveMemoryWarning() {
