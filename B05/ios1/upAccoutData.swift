@@ -50,6 +50,9 @@ class upAccoutData: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource
         phoneField.text = userData["phone"]
         
         
+        
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -67,13 +70,16 @@ class upAccoutData: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource
         let url = URL(string: urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let content = String(data: data, encoding: .utf8) {
-                print(content)
+                
                 if content == "success" {
                     
                     /////創建成功訊息\\\\\\
                     let alert = UIAlertController(title: "更新訊息", message: "更新成功", preferredStyle: .alert)
                     
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {  (action) in
+                        
+                        self.performSegue(withIdentifier: "gotoAccountDatail", sender: nil)
+                        
                         alert.dismiss(animated: true, completion: nil)
                     }))
                     

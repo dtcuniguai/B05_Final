@@ -11,6 +11,7 @@
 import Foundation
 import UIKit
 import Firebase
+import Speech
 
 class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate{
     
@@ -38,6 +39,8 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
     @IBOutlet weak var textSearchLable: UILabel!
     //所有縣市
     
+    @IBOutlet weak var mic: UIButton!
+    
     
     var city = ["台北市","新北市","桃園市","台中市","台南市","高雄市","基隆市","新竹縣","新竹市","嘉義市","苗栗縣","彰化縣","南投縣","雲林縣","嘉義市","嘉義縣","屏東縣","宜蘭縣","花蓮縣","台東縣","澎湖縣"]
     //該城市的地區
@@ -51,6 +54,11 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
     var countRow: Int =  0
     
     var pick = UIPickerView()
+    
+    private let speechRecognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "zh-Hant"))
+    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    private var recognitionTask: SFSpeechRecognitionTask?
+    private let audioEngine = AVAudioEngine()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,6 +129,38 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
             
             title = "詳細搜尋"
         }
+        
+       ////////
+        mic.isEnabled = false  //2
+        
+        speechRecognizer?.delegate = self as? SFSpeechRecognizerDelegate  //3
+        
+        SFSpeechRecognizer.requestAuthorization { (authStatus) in  //4
+            
+            var isButtonEnabled = false
+            
+            switch authStatus {  //5
+            case .authorized:
+                isButtonEnabled = true
+                
+            case .denied:
+                isButtonEnabled = false
+                print("User denied access to speech recognition")
+                
+            case .restricted:
+                isButtonEnabled = false
+                print("Speech recognition restricted on this device")
+                
+            case .notDetermined:
+                isButtonEnabled = false
+                print("Speech recognition not yet authorized")
+            }
+            
+            OperationQueue.main.addOperation() {
+                self.mic.isEnabled = isButtonEnabled
+            }
+        }
+        ////////
     }
     
     
@@ -143,9 +183,9 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
         
-           
-        var titleRow = self.city[row]
         
+        
+        var titleRow = self.city[row]
         
         if countRow == district.count  {
             
@@ -156,7 +196,7 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
             
         else if countRow == ResType.count {
             
-             titleRow = ResType[row]
+            titleRow = ResType[row]
             
             
         }
@@ -165,6 +205,10 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
             
             titleRow = sortchange[row]
         }
+            
+        
+        
+        
         
         return titleRow
         
@@ -177,6 +221,7 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
         if countRow == city.count{
             
             self.cityTextField.text = self.city[row]
+            
             self.districtTextField.text = ""
             //pick.isHidden = true
             
@@ -188,14 +233,14 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
                 self.district.removeAll()
                 self.district.append("-------")
                 if snapshot.exists() {
-                    for a in ((snapshot.value as AnyObject).allKeys)!{ // a 是在Firebase上的區域
+                    for a in ((snapshot.value as AnyObject).allKeys)!{
                         
                         self.district.append(a as! String)
                     }
                 } else {
                     print("false")
                 }
-                //self.districtPickerView.reloadAllComponents()
+                
             })
             
             
@@ -211,10 +256,7 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
         else if countRow == ResType.count {
             
             self.ResTypeTextField.text = self.ResType[row]
-            
-            
-            
-            
+
             
         }
         else if countRow == sortchange.count {
@@ -267,6 +309,7 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
             destinationController.sort = sort.text!
             
         }
+        
     }
     
     
@@ -281,5 +324,79 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
         
         return (true)
     }
+    
+    
+    @IBAction func micAction(_ sender: Any) {
+        
+        
+    }
+    
+    
+   /* func startRecording() {
+        
+        
+        if recognitionTask != nil {
+            recognitionTask?.cancel()
+            recognitionTask = nil
+        }
+        
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(AVAudioSessionCategoryRecord)
+            try audioSession.setMode(AVAudioSessionModeMeasurement)
+            try audioSession.setActive(true, with: .notifyOthersOnDeactivation)
+        } catch {
+            print("audioSession properties weren't set because of an error.")
+        }
+        
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        
+        guard  let inputNode = audioEngine.inputNode else {
+            fatalError("Audio engine has no input node")
+        }
+        
+        guard let recognitionRequest = recognitionRequest else {
+            fatalError("Unable to create an SFSpeechAudioBufferRecognitionRequest object")
+        }
+        
+        recognitionRequest.shouldReportPartialResults = true
+        
+        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest, resultHandler: { (result, error) in
+            
+            var isFinal = false
+            
+            if result != nil {
+                
+                self.textSearchTextField.text = result?.bestTranscription.formattedString
+                isFinal = (result?.isFinal)!
+            }
+            
+            if error != nil || isFinal {
+                self.audioEngine.stop()
+                inputNode.removeTap(onBus: 0)
+                
+                self.recognitionRequest = nil
+                self.recognitionTask = nil
+                
+                self.mic.isEnabled = true
+            }
+        })
+        
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, when) in
+            self.recognitionRequest?.append(buffer)
+        }
+        
+        audioEngine.prepare()
+        
+        do {
+            try audioEngine.start()
+        } catch {
+            print("audioEngine couldn't start because of an error.")
+        }
+        
+        //textSearchTextField.text = "Say something, I'm listening!"
+        
+    }*/
     
 }

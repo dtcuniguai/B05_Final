@@ -44,6 +44,7 @@ class mainMenu:  UIViewController, UITableViewDelegate, UITableViewDataSource {
 //Writer : Niguai
 //Last UpdUser:Niguai
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let restaurant = FirebaseRestaurantArr[indexPath.item];
         let cell = tableView.dequeueReusableCell(withIdentifier: "hotSearCell", for: indexPath) as! hotSearchCell;
         cell.resName.text = restaurant.Name;
@@ -144,6 +145,7 @@ class mainMenu:  UIViewController, UITableViewDelegate, UITableViewDataSource {
 //Last UpdUser:Niguai
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "MainGoDetail" {
+            
             if let indexPath = hotSearView.indexPathForSelectedRow {
                 let destinationController = segue.destination as! restaurantDetail
                 destinationController.restaurant = FirebaseRestaurantArr[indexPath.row]

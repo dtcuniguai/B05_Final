@@ -12,7 +12,7 @@ import UIKit
 class userMenu:UITableViewController{
     
     var menuArray = [Menu]();
-    var menuUrl =  "http://140.136.150.95:3000/menu/detail?storeID=1";
+    var menuUrl =  "http://140.136.150.95:3000/menu/detail?storeID=14";
     var index = 0;
     
     override func viewDidLoad() {
@@ -44,6 +44,7 @@ class userMenu:UITableViewController{
                                            visable:menu["visable"] as! String
                         );
                         self.menuArray.append(SearObj);
+                        print(SearObj)
                     }
                     self.tableView.reloadData()
                 }
@@ -98,12 +99,12 @@ class userMenu:UITableViewController{
     }
     
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    /*override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "menuUpdate" {
             let destinationController = segue.destination as! menuDetail
             destinationController.MenuDetail = self.menuArray[self.index]
         }
-    }
+    }*/
     
     
     

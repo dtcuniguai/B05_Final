@@ -25,14 +25,13 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
     @IBOutlet weak var birthdayYear: UITextField!
     //職業
     @IBOutlet weak var career: UITextField!
-    //類別
-    @IBOutlet weak var userType: UITextField!
+    
+    @IBOutlet weak var userPic: UIImageView!
     
     let refUserData = Database.database().reference().child("Accout")
     
     var sexuality = ["男性","女性","中性"]
     var careerArray = ["學生","老師","公務員","軍人","工程師","司機","建築師","金融業","服務業","餐飲業","政治家"]
-    var userTypeArray = ["店家","客人"]
     
     var countRow: Int =  0
     
@@ -69,12 +68,14 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         userNameField.delegate = self
         sexualityField.inputView = pick
         career.inputView = pick
-        userType.inputView = pick
+        
         phoneField.inputAccessoryView = toolBar
         sexualityField.inputAccessoryView = toolBar
         career.inputAccessoryView = toolBar
-        userType.inputAccessoryView = toolBar
         
+        userPic.isUserInteractionEnabled = true
+        var tapGesure = UITapGestureRecognizer(target: self, action: "camera")
+        self.userPic.addGestureRecognizer(tapGesure)
         
         
         
@@ -121,29 +122,24 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         
         //
         
+        
         let birthday = fullDay.characters.split{$0 == "/"}.map(String.init)
-        if userType.text == "客人"{
-            userType.text = "S"
-        }
-        else{
-            userType.text = "U"
-        }
+        
         if sexualityField.text == "男生"{
-            sexualityField.text = "B"
+            AccountData.user_Gender = "B"
         }
         else{
-            sexualityField.text = "G"
+            AccountData.user_Gender = "G"
         }
         
-        let urlStr = "http://140.136.150.95:3000/user/register?account=\(accountField.text!)&password=\(passwordField.text!)&userType=\(userType.text!)&name=\(userNameField.text!)&gender=\(sexualityField.text!)&career=\(career.text!)&month=\(birthday[1])&day=\(birthday[0])&year=\(birthday[2])&phone=\(phoneField.text!)&userPic=".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let urlStr = "http://140.136.150.95:3000/user/register?account=\(accountField.text!)&password=\(passwordField.text!)&userType=\("U")&name=\(userNameField.text!)&gender=\(AccountData.user_Gender)&career=\(career.text!)&month=\(birthday[1])&day=\(birthday[0])&year=\(birthday[2])&phone=\(phoneField.text!)&userPic=".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let url = URL(string: urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let content = String(data: data, encoding: .utf8) {
                 
                 if content.count != 0 {
-                    print(content.count)
+                    
                     self.signUpMesssage()
-                    print(content)
                 }
                 else{
                     self.Message(titleText: "錯誤", messageText: "此帳號已有人申請")
@@ -151,6 +147,10 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
             }
         }
         task.resume()
+        
+        
+        
+        
         
     }
     
@@ -180,14 +180,11 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
             let titleRow = careerArray[row]
             return titleRow
         }
-        else if countRow == userTypeArray.count{
-            let titleRow = userTypeArray[row]
-            return titleRow
-        }
         
         return ""
         
     }
+    
     
     //點擊選單後要做的動作
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -199,12 +196,10 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
          else if countRow == careerArray.count {
             self.career.text = self.careerArray[row]
         }
-         else if countRow == userTypeArray.count{
-            self.userType.text = self.userTypeArray[row]
-        }
         
         
     }
+    
     
     //點選指定的textField要的事情
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -214,22 +209,18 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         if (textField == self.sexualityField){
             
             countRow = sexuality.count
-            print("111111")
-            
+   
         }
         
         else if textField == self.career {
-            countRow = careerArray.count
-            print("2222222")
             
-        }
-        else if textField  == self.userType{
-            countRow = userTypeArray.count
-            print("3333333")
+            countRow = careerArray.count
             
         }
         else if textField == self.birthdayYear{
+            
             creatDatePicker()
+        
         }
         else if textField == self.phoneField{
             
@@ -238,6 +229,7 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
             
         }
     }
+    
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         ScrollView.setContentOffset((CGPoint(x: 0, y: -60)), animated: true)
@@ -251,6 +243,7 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         userNameField.resignFirstResponder()
         return (true)
     }
+    
     
     //back To login page
     @IBAction func backFronyPage(_ sender: Any) {
@@ -276,10 +269,32 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {  (action) in
             
-            let main = self.storyboard?.instantiateViewController(withIdentifier: "Menu")
-            self.present(main!, animated: false, completion: nil)
+            let urlStr = "http://140.136.150.95:3000/user/login?account=\(self.accountField.text!)&password=\(self.passwordField.text!)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+            let url = URL(string: urlStr!)
+            let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+                if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
+                    DispatchQueue.main.async {
+                        for userData in dic{
+                            AccountData.user_ID = userData["user_ID"]! as! Int
+                            AccountData.user_Account = userData["user_Account"] as! String
+                            AccountData.user_Name = userData["user_Name"] as! String
+                            AccountData.user_Type = userData["user_Type"] as! String
+                            AccountData.user_Gender = userData["user_Gender"] as! String
+                            AccountData.user_Career = userData["user_Career"] as! String
+                            AccountData.user_Day = userData["user_Day"] as! String
+                            AccountData.user_Month = userData["user_Month"] as! String
+                            AccountData.user_Year = userData["user_Year"] as! String
+                            AccountData.user_Tel = userData["user_Tel"] as! String
+                            
+                        }
+                    }
+                }
+            }
+            task.resume()
             
-            alert.dismiss(animated: true, completion: nil)
+            
+                let main = self.storyboard?.instantiateViewController(withIdentifier: "Menu")
+                self.present(main!, animated: false, completion: nil)
             
         }))
         
@@ -314,6 +329,56 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
     
     @objc func donePressd()  {
         view.endEditing(true)
+    }
+    
+    
+    func camera() {
+        // 建立一個 UIImagePickerController 的實體
+        let imagePickerController = UIImagePickerController()
+        
+        // 委任代理
+        //imagePickerController.delegate = self
+        
+        // 建立一個 UIAlertController 的實體
+        // 設定 UIAlertController 的標題與樣式為 動作清單 (actionSheet)
+        let imagePickerAlertController = UIAlertController(title: "上傳圖片", message: "請選擇要上傳的圖片", preferredStyle: .actionSheet)
+        
+        // 建立三個 UIAlertAction 的實體
+        // 新增 UIAlertAction 在 UIAlertController actionSheet 的 動作 (action) 與標題
+        let imageFromLibAction = UIAlertAction(title: "照片圖庫", style: .default) { (Void) in
+            
+            // 判斷是否可以從照片圖庫取得照片來源
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                
+                // 如果可以，指定 UIImagePickerController 的照片來源為 照片圖庫 (.photoLibrary)，並 present UIImagePickerController
+                imagePickerController.sourceType = .photoLibrary
+                self.present(imagePickerController, animated: true, completion: nil)
+            }
+        }
+        let imageFromCameraAction = UIAlertAction(title: "相機", style: .default) { (Void) in
+            
+            // 判斷是否可以從相機取得照片來源
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                
+                // 如果可以，指定 UIImagePickerController 的照片來源為 照片圖庫 (.camera)，並 present UIImagePickerController
+                imagePickerController.sourceType = .camera
+                self.present(imagePickerController, animated: true, completion: nil)
+            }
+        }
+        
+        // 新增一個取消動作，讓使用者可以跳出 UIAlertController
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (Void) in
+            
+            imagePickerAlertController.dismiss(animated: true, completion: nil)
+        }
+        
+        // 將上面三個 UIAlertAction 動作加入 UIAlertController
+        imagePickerAlertController.addAction(imageFromLibAction)
+        imagePickerAlertController.addAction(imageFromCameraAction)
+        imagePickerAlertController.addAction(cancelAction)
+        
+        // 當使用者按下 uploadBtnAction 時會 present 剛剛建立好的三個 UIAlertAction 動作與
+        present(imagePickerAlertController, animated: true, completion: nil)
     }
     
     

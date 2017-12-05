@@ -13,6 +13,7 @@ class userShowComment: UIViewController, UITextViewDelegate {
    
     
     
+    @IBOutlet weak var upDataButton: UIButton!
     @IBOutlet weak var memoTextView: UITextView!
     @IBOutlet weak var totalStar: CosmosView!
     @IBOutlet weak var serviceStar: CosmosView!
@@ -60,12 +61,31 @@ class userShowComment: UIViewController, UITextViewDelegate {
         let url = URL(string: urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let content = String(data: data, encoding: .utf8) {
-                print(content)
+                if content == "success" {
+                    
+                    /////創建成功訊息\\\\\\
+                    let alert = UIAlertController(title: "更新訊息", message: "更新成功", preferredStyle: .alert)
+                    
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {  (action) in
+ 
+                        self.navigationController?.popViewController(animated: true)
+ 
+                        alert.dismiss(animated: true, completion: nil)
+                    }))
+                    
+                    self.present(alert, animated: true, completion: nil)
+                    //////\\\\\\\\\\\\\\\
+                }
+                else{
+                    print("error")
+                }
                 
             }
         }
         task.resume()
-    
+        
+        
+        
     }
     
     
