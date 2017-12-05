@@ -151,8 +151,6 @@ class mainMenu:  UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    
-    
 }
 
 
@@ -169,3 +167,6 @@ class hotSearchCell:UITableViewCell{
     @IBOutlet weak var resID: UILabel!
     @IBOutlet weak var resEvlateImg: UIImageView!
 }
+
+
+
