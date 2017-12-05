@@ -208,31 +208,15 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         
         if (textField == self.sexualityField){
             countRow = sexuality.count
-<<<<<<< HEAD
         }
-        
         else if textField == self.career {
             countRow = careerArray.count
-        }
-        else if textField  == self.userType{
-            countRow = userTypeArray.count
-=======
-   
-        }
-        
-        else if textField == self.career {
-            
-            countRow = careerArray.count
-            
->>>>>>> origin/Hsin
         }
         else if textField == self.birthdayYear{
-            
             creatDatePicker()
-        
         }
         else if textField == self.phoneField{
-            
+
         }
         else if textField == self.userNameField {
             

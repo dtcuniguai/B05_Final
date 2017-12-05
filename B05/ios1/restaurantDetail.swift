@@ -16,7 +16,6 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var menuContainer: UIView!
     @IBOutlet weak var restaurantImage: UIImageView!//餐廳圖片
     @IBOutlet weak var restaurantDetailTable: UITableView!//餐廳資料的table
-    git
     var restaurant: Restaurant!
     
     var commentArray = [resComment]()
