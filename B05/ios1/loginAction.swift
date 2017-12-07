@@ -71,16 +71,8 @@ class loginAction :UIViewController, UITextFieldDelegate{
         
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {  (action) in
             
-            //self.Message(titleText: "ssdadadad", messageText: "sdasdasdasd")
-            if AccountData.user_Type == "U" {
                 let main = self.storyboard?.instantiateViewController(withIdentifier: "Menu")
                 self.present(main!, animated: false, completion: nil)
-            }
-            else{
-                let main = self.storyboard?.instantiateViewController(withIdentifier: "storeMenu")
-                self.present(main!, animated: false, completion: nil)
-            }
-            
             
             alert.dismiss(animated: true, completion: nil)
             

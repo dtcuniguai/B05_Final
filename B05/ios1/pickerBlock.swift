@@ -42,16 +42,18 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
     @IBOutlet weak var mic: UIButton!
     
     
-    var city = ["台北市","新北市","桃園市","台中市","台南市","高雄市","基隆市","新竹縣","新竹市","嘉義市","苗栗縣","彰化縣","南投縣","雲林縣","嘉義市","嘉義縣","屏東縣","宜蘭縣","花蓮縣","台東縣","澎湖縣"]
+    var city = ["-------","台北市","新北市","桃園市","台中市","台南市","高雄市","基隆市","新竹縣","新竹市","嘉義市","苗栗縣","彰化縣","南投縣","雲林縣","嘉義市","嘉義縣","屏東縣","宜蘭縣","花蓮縣","台東縣","澎湖縣"]
     //該城市的地區
     var district = [String]()
     
     //所有餐廳類別
     var ResType = ["-------","其他美食","日式料理","亞洲料理","素食","烘焙、甜點、零食","小吃","速食料理","冰品、飲料、甜湯","咖啡、簡餐、茶","燒烤類","鍋類","主題特色餐廳","異國料理","中式料理","早餐","buffet自助餐"]
     
-    var sortchange = ["依熱門排序","依評價排序"]
+    var sortchange = ["-------","依熱門排序","依評價排序"]
     
     var countRow: Int =  0
+    
+    var statusStr :String!
     
     var pick = UIPickerView()
     
@@ -184,33 +186,34 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
         
         
         
+        if countRow == city.count && statusStr == "C"{
+            let titleRow = city[row]
+             return titleRow
+        }
         
-        var titleRow = self.city[row]
         
-        if countRow == district.count  {
-            
-            titleRow = district[row]
+        if countRow == district.count && statusStr == "D"{
+            let titleRow = district[row]
+            return titleRow
             
             
         }
             
-        else if countRow == ResType.count {
+        else if countRow == ResType.count && statusStr == "R" {
             
-            titleRow = ResType[row]
+            let titleRow = ResType[row]
+            return titleRow
             
             
         }
             
-        else if countRow == sortchange.count {
+        else if countRow == sortchange.count && statusStr == "S" {
             
-            titleRow = sortchange[row]
+            let titleRow = sortchange[row]
+            return titleRow
         }
-            
         
-        
-        
-        
-        return titleRow
+        return ""
         
     }
     
@@ -218,10 +221,14 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
     //將所選的項目輸入指定的TextField，並讓選單消失
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        if countRow == city.count{
+        if countRow == city.count && statusStr == "C"{
             
-            self.cityTextField.text = self.city[row]
-            
+            if city[row] == "-------" {
+                self.cityTextField.text = ""
+            }
+            else {
+                self.cityTextField.text = self.city[row]
+            }
             self.districtTextField.text = ""
             //pick.isHidden = true
             
@@ -246,25 +253,32 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
             
         }
             
-        else if countRow == district.count {
+        else if countRow == district.count && statusStr == "D" {
             
-            self.district.append("-------")
-            self.districtTextField.text = self.district[row]
-
+            if district[row] == "-------" {
+                self.districtTextField.text = ""
+            }
+            else {
+                self.districtTextField.text = self.district[row]
+            }
         }
             
-        else if countRow == ResType.count {
-            
-            self.ResTypeTextField.text = self.ResType[row]
-
-            
+        else if countRow == ResType.count && statusStr == "R" {
+            if ResType[row] == "-------" {
+                self.ResTypeTextField.text = ""
+            }
+            else {
+                self.ResTypeTextField.text = self.ResType[row]
+            }
         }
-        else if countRow == sortchange.count {
-            self.sort.text = self.sortchange[row]
-            
+        else if countRow == sortchange.count && statusStr == "S"{
+            if sortchange[row] == "-------" {
+                self.sort.text = ""
+            }
+            else {
+                self.sort.text = self.sortchange[row]
+            }
         }
-        
-        
     }
     
     
@@ -272,21 +286,23 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if (textField == self.cityTextField){
             countRow = city.count
+            statusStr = "C"
             
         }
         else if (textField == self.districtTextField){
             
             countRow = district.count
-            
+            statusStr = "D"
         }
             
         else if (textField == self.ResTypeTextField){
             
             countRow  = ResType.count
-            
+            statusStr = "R"
         }
         else if textField == self.sort {
             countRow = sortchange.count
+            statusStr = "S"
         }
         
     }
@@ -315,7 +331,10 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
     
     @objc func donePressd() {
         
-            view.endEditing(true)
+        
+        view.endEditing(true)
+        
+        
     }
     
     

@@ -130,13 +130,9 @@ struct Menu {
 struct Orderlist {
     
     var orderID: Int
-    var userName: String
-    var orderTime: String
-    var menuName: String
     var total: Int
-    var price: Int
     var menuID: Int
-    var updateValue: Int
+    var userID: Int
 }
 
 
