@@ -18,8 +18,6 @@ class accountComment: UIViewController, UITextFieldDelegate, UITextViewDelegate 
     @IBOutlet weak var tasteStar: CosmosView!
     @IBOutlet weak var envirStar: CosmosView!
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var image2: UIImageView!
-    @IBOutlet weak var image1: UIImageView!
     @IBOutlet weak var image: UIImageView!
     
     @IBOutlet weak var textView: UITextView!
@@ -61,7 +59,6 @@ class accountComment: UIViewController, UITextFieldDelegate, UITextViewDelegate 
         
         textView.layer.borderWidth = 1
         textView.layer.borderColor = UIColor.black.cgColor
-        
         textView.inputAccessoryView = toolBar
         
             
@@ -88,10 +85,28 @@ class accountComment: UIViewController, UITextFieldDelegate, UITextViewDelegate 
             if let data = data, let content = String(data: data, encoding: .utf8) {
                 print(content)
                 if content == "success" {
+                    let alert = UIAlertController(title: "評論", message: "新增成功", preferredStyle: .alert)
                     
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {  (action) in
+                        
+                        self.navigationController?.popViewController(animated: true)
+                        
+                        alert.dismiss(animated: true, completion: nil)
+                    }))
+                    
+                    self.present(alert, animated: true, completion: nil)
                 }
                 else{
-                    print("error")
+                    //print("error")
+                    print(self.textView.text!)
+                    print(self.scoreStar.rating)
+                    print(self.envirStar.rating)
+                    print(self.tasteStar.rating)
+                    print(self.serviceStar.rating)
+                    print(AccountData.user_ID)
+                    print(AccountData.res_ID)
+                    print(self.commentID)
+                    
                 }
                 
             }

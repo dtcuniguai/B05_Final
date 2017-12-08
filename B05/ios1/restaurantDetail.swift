@@ -12,8 +12,6 @@ import MapKit
 
 class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var segm: UISegmentedControl!
-    @IBOutlet weak var menuContainer: UIView!
     @IBOutlet weak var restaurantImage: UIImageView!//餐廳圖片
     @IBOutlet weak var restaurantDetailTable: UITableView!//餐廳資料的table
     var restaurant: Restaurant!
@@ -23,7 +21,6 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     override func viewDidLoad() {
         
         addClicker()
-        segm.selectedSegmentIndex = 0
         super.viewDidLoad()
         let urlStr = "http:140.136.150.95:3000/comment/show/store?storeID=\(restaurant.ResID)".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
         let url = URL(string:urlStr!)
@@ -52,7 +49,6 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         task.resume()
         
-        
         if restaurant.ResImage != nil {
             let url_restaurant = URL(string: restaurant.ResImage!)
             let data = try? Data(contentsOf: url_restaurant!)
@@ -61,14 +57,6 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         title = restaurant.Name
         AccountData.res_ID = restaurant.ResID
-
-        
-    }
-
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
     }
     
     
@@ -158,28 +146,15 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
                 destinationController.commentData = commentArray[indexPath.row - 6]
             }
         }
-    }
-    
-    
-    @IBAction func segmAction(_ sender: Any) {
-        if segm.selectedSegmentIndex == 0{
-            restaurantDetailTable.isHidden = false
-            
-            
-            menuContainer.isHidden = true
-        }
-        else if segm.selectedSegmentIndex == 1{
-            restaurantDetailTable.isHidden = true
-            
-            menuContainer.isHidden = true
-        }
-        else if segm.selectedSegmentIndex == 2{
-            restaurantDetailTable.isHidden = true
-            
-            menuContainer.isHidden = false
-        }
         
+        if segue.identifier == "gotoOrderDetail"{
+            let destinationController = segue.destination as! userMenu
+            destinationController.resID = restaurant.ResID
+        }
     }
+    
+    
+    
     
    
     @IBAction func gotoMap(_ sender: Any) {
