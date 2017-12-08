@@ -20,7 +20,6 @@ class orderDetail: UIViewController {
     var order = [Orderlist]()
     var index = 0
     var totalPrice = 0
-    var orderId = 0
     
     
     override func viewDidLoad() {
@@ -33,8 +32,6 @@ class orderDetail: UIViewController {
         totalPrice = menu[index].price * order[index].total
         total.text = String(totalPrice)
         
-        order[index].userID = AccountData.user_ID
-        order[index].orderID = orderId
     }
 
     override func didReceiveMemoryWarning() {
@@ -61,20 +58,13 @@ class orderDetail: UIViewController {
     }
     
     @IBAction func finishButton(_ sender: Any) {
-        self.performSegue(withIdentifier: "goMenu", sender: nil)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goMenu" {
-            
-                let destinationController = segue.destination as! userMenu
-                destinationController.index = index
-                destinationController.totalPrices = totalPrice
-                destinationController.orderArray = order
-            
-        }
+        let notificationName = Notification.Name("GetUpdateNoti")
+        NotificationCenter.default.post(name: notificationName, object: nil, userInfo: ["PASS":order])
+        self.navigationController?.popViewController(animated: true)
         
     }
+    
+    
     
     
     /*

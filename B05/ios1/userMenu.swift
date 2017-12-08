@@ -16,15 +16,13 @@ class userMenu:UITableViewController{
     var menuUrl =  "http://140.136.150.95:3000/menu/detail/store?storeID=14";
     var index = 0;
     var totalPrice = 0
-    var totalPrices = 0
-    var orderId = 0
     var s  = 0
     var flag = 0
     var resID = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print(1)
         var urlStr = menuUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
         var url = URL(string:urlStr!)
         var task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
@@ -47,7 +45,7 @@ class userMenu:UITableViewController{
                     }
                     if (self.flag == 0){
                         for var i in 0...self.menuArray.count - 1{
-                            let data = Orderlist(orderID: self.orderId, total: 0, menuID: self.menuArray[i].menuID, userID: AccountData.user_ID)
+                            let data = Orderlist(orderID: 0, total: 0, menuID: self.menuArray[i].menuID, userID: AccountData.user_ID, storeID: 0, price: 0, order_Time: "", pay_Time: "", name: "")
                             self.orderArray.append(data)
                         }
                     }
@@ -59,18 +57,10 @@ class userMenu:UITableViewController{
         }
         task.resume()
         
-         urlStr = "http://140.136.150.95:3000/orderlist/getID".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-         url = URL(string: urlStr!)
-         task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
-            if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
-                DispatchQueue.main.async {
-                    for comment in dic{
-                        self.orderId = comment["ID"] as! Int
-                    }
-                }
-            }
-        }
-        task.resume()
+        getOrderID()
+        
+        let notificationName = Notification.Name("GetUpdateNoti")
+        NotificationCenter.default.addObserver(self, selector: #selector(getUpdateNoti(noti:)), name: notificationName, object: nil)
         
     }
     
@@ -147,8 +137,6 @@ class userMenu:UITableViewController{
                 let destinationController = segue.destination as! orderDetail
                 destinationController.index = indexPath.row
                 destinationController.menu = menuArray
-                destinationController.totalPrice = totalPrice
-                destinationController.orderId = orderId
                 destinationController.order = orderArray
             }
         }
@@ -164,24 +152,23 @@ class userMenu:UITableViewController{
                 
                 let url = URL(string: urlStr!)
                 let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
-                    if let data = data, let dataaa = String(data: data, encoding: .utf8) {
-                        print(dataaa)
+                    if let data = data, let _ = String(data: data, encoding: .utf8) {
+                        
                     }
                 }
                 task.resume()
+                
+                orderArray[i].total = 0
             }
             
             if i == menuArray.count - 1{
-                let alert = UIAlertController(title: "訂單資訊", message: "訂單完成", preferredStyle: .alert)
+                let alert = UIAlertController(title: "訂單資訊", message: "訂單完成，請到會員資料確認訂單狀態", preferredStyle: .alert)
                 
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {  (action) in
                     
-                    //let main = self.storyboard?.instantiateViewController(withIdentifier: "Menu")
-                    //self.present(main!, animated: false, completion: nil)
-                    self.flag = 0
-                    self.orderArray.removeAll()
                     self.totalPrice = 0
-                    self.viewDidLoad()
+                    self.getOrderID()
+                    self.tableView.reloadData()
                     alert.dismiss(animated: true, completion: nil)
                     
                 }))
@@ -189,6 +176,33 @@ class userMenu:UITableViewController{
                 self.present(alert, animated: true, completion: nil)
             }
         }
+    }
+    
+    
+    func getUpdateNoti(noti:Notification) {
+        //接收編輯頁面回傳的資訊
+        orderArray = noti.userInfo!["PASS"] as! [Orderlist]
+        
+    }
+    
+    
+    func getOrderID()   {
+       var urlStr = "http://140.136.150.95:3000/orderlist/getID".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        var url = URL(string: urlStr!)
+        var task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+            if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
+                DispatchQueue.main.async {
+                    for comment in dic{
+                            for var i in 0...self.menuArray.count - 1{
+                                self.orderArray[i].orderID = comment["ID"] as! Int
+                            }
+                            self.flag = 1
+                    }
+                    
+                }
+            }
+        }
+        task.resume()
     }
     
     

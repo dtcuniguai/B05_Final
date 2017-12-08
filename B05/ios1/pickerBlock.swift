@@ -223,12 +223,9 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
         
         if countRow == city.count && statusStr == "C"{
             
-            if city[row] == "-------" {
-                self.cityTextField.text = ""
-            }
-            else {
+            
                 self.cityTextField.text = self.city[row]
-            }
+            
             self.districtTextField.text = ""
             //pick.isHidden = true
             
@@ -255,12 +252,10 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
             
         else if countRow == district.count && statusStr == "D" {
             
-            if district[row] == "-------" {
-                self.districtTextField.text = ""
-            }
-            else {
+            
+
                 self.districtTextField.text = self.district[row]
-            }
+            
         }
             
         else if countRow == ResType.count && statusStr == "R" {

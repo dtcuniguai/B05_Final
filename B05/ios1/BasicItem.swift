@@ -133,7 +133,14 @@ struct Orderlist {
     var total: Int
     var menuID: Int
     var userID: Int
+    var storeID: Int
+    var price: Int
+    var order_Time: String
+    var pay_Time: String
+    var name: String
 }
+
+
 
 
 
