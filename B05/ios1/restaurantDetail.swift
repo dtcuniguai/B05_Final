@@ -204,8 +204,8 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func addClicker(){
-        print(restaurant.ResID)
-        let addUrl = "140.136.150.95:3000/click?storeID=\(restaurant.ResID)"
+
+        let addUrl = "http://140.136.150.95:3000/click/\(restaurant.ResID)"
         let urlStr = addUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
         let url = URL(string:urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in

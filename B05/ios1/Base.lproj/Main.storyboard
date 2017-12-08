@@ -349,7 +349,6 @@
                                             <outlet property="resImg" destination="oHq-Bb-GsA" id="3bd-b7-30T"/>
                                             <outlet property="resName" destination="SZI-t4-MZF" id="mkC-Mh-RKa"/>
                                             <outlet property="resType" destination="d3O-Wy-kDR" id="6HG-hI-OVp"/>
-                                            <segue destination="CMR-1B-xii" kind="show" identifier="MainGoDetail" id="l57-ma-a77"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -379,6 +378,7 @@
                         <outlet property="Activity" destination="HLr-xE-bLR" id="UiS-yU-rQL"/>
                         <outlet property="hotSearView" destination="B6K-Zj-Ocv" id="jRN-Mn-6ND"/>
                         <outlet property="segm" destination="onI-Ra-P5i" id="NLD-OQ-Wj5"/>
+                        <segue destination="CMR-1B-xii" kind="show" identifier="MainGoDetail" id="tkb-9Z-nRd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uVb-an-uCZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2164,7 +2164,7 @@
         <image name="Search" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="1IO-XJ-zY6"/>
+        <segue reference="tkb-9Z-nRd"/>
         <segue reference="Ckd-L0-kCc"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -20,15 +20,9 @@ class mainMenu:  UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var Activity: UIActivityIndicatorView!
     @IBOutlet weak var hotSearView: UITableView!
     var FirebaseRestaurantArr:[Restaurant] = [];
-    var a = 0
     var urlchange = "http://140.136.150.95:3000/search/hot";
-
+    var row:Int = 0
     
-    /*var documentDictionary:String = {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true);
-        let imageFileDictionary = paths[0];
-        return imageFileDictionary;
-    }();*/
     ////////////////////////////////////////////////////////////  Detail Function   ////////////////////////////////////////////////////////////
 
     
@@ -66,10 +60,16 @@ class mainMenu:  UIViewController, UITableViewDelegate, UITableViewDataSource {
     
 
     //assign tableView's height
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
-    {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
         return 190.0;
-
+    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //Change the selected background view of the cell.
+        tableView.deselectRow(at: indexPath, animated: true)
+        row = indexPath.row
+        self.performSegue(withIdentifier: "MainGoDetail", sender: self)
     }
 
 //Main function
@@ -79,7 +79,6 @@ class mainMenu:  UIViewController, UITableViewDelegate, UITableViewDataSource {
         
         self.view.addSubview(Activity)
         Activity.startAnimating()
-        self.a = 0
         let urlStr = urlchange.addingPercentEncoding(withAllowedCharacters:
             .urlQueryAllowed)
         let url = URL(string:urlStr!)
@@ -145,11 +144,8 @@ class mainMenu:  UIViewController, UITableViewDelegate, UITableViewDataSource {
 //Last UpdUser:Niguai
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "MainGoDetail" {
-            
-            if let indexPath = hotSearView.indexPathForSelectedRow {
-                let destinationController = segue.destination as! restaurantDetail
-                destinationController.restaurant = FirebaseRestaurantArr[indexPath.row]
-            }
+            let destinationController = segue.destination as! restaurantDetail
+            destinationController.restaurant = FirebaseRestaurantArr[self.row]
         }
     }
     
