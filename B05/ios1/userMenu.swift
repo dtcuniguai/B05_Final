@@ -45,7 +45,7 @@ class userMenu:UITableViewController{
                     }
                     if (self.flag == 0){
                         for var i in 0...self.menuArray.count - 1{
-                            let data = Orderlist(orderID: 0, total: 0, menuID: self.menuArray[i].menuID, userID: AccountData.user_ID, storeID: 0, price: 0, order_Time: "", pay_Time: "", name: "")
+                            let data = Orderlist(orderID: 0, menuID: self.menuArray[i].menuID, userID: AccountData.user_ID, storeID: 0, total: 0)
                             self.orderArray.append(data)
                         }
                     }
@@ -230,6 +230,10 @@ class userMenuCell:UITableViewCell{
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
+        
+        quota.layer.borderWidth = 1
+        quota.layer.borderColor = UIColor.black.cgColor
+        
     }
     
     override func awakeFromNib() {

@@ -32,6 +32,9 @@ class orderDetail: UIViewController {
         totalPrice = menu[index].price * order[index].total
         total.text = String(totalPrice)
         
+        number.layer.borderWidth = 1
+        number.layer.borderColor = UIColor.black.cgColor
+        
     }
 
     override func didReceiveMemoryWarning() {

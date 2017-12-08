@@ -74,9 +74,8 @@ class loginAction :UIViewController, UITextFieldDelegate{
         
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {  (action) in
             
-                let main = self.storyboard?.instantiateViewController(withIdentifier: "Menu")
-                self.present(main!, animated: false, completion: nil)
-            
+            let main = self.storyboard?.instantiateViewController(withIdentifier: "Menu")
+            self.present(main!, animated: false, completion: nil)
             alert.dismiss(animated: true, completion: nil)
         }))
         

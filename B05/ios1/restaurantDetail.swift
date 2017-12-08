@@ -19,29 +19,10 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     var commentArray = [resComment]()
     
     override func viewDidLoad() {
-
+        
+        addClicker()
         super.viewDidLoad()
-        
-        
-        
-        if restaurant.ResImage != nil {
-            let url_restaurant = URL(string: restaurant.ResImage!)
-            let data = try? Data(contentsOf: url_restaurant!)
-            restaurantImage.image = UIImage(data: data!)
-        }
-        
-        title = restaurant.Name
-        AccountData.res_ID = restaurant.ResID
-
-        
-    }
-
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        commentArray.removeAll()
-        let urlStr = "http:140.136.150.95:3000/comment/show/store?storeID=\(restaurant.ResID)".addingPercentEncoding(withAllowedCharacters:
-            .urlQueryAllowed)
+        let urlStr = "http:140.136.150.95:3000/comment/show/store?storeID=\(restaurant.ResID)".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
         let url = URL(string:urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
@@ -49,15 +30,14 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
                     for commentData in dic {
                         
                         let commentObj = resComment(ID: commentData["ID"] as! Int,
-                                                    create_UserID: commentData["create_UserID"] as! Int,
-                                                    StoreID: commentData["storeID"] as! Int,
-                                                    Memo: commentData["Memo"] as! String,
-                                                    Score: commentData["Score"] as! Double,
-                                                    Score_Envir: commentData["Score_Envir"] as! Double,
-                                                    Score_Taste: commentData["Score_Taste"] as! Double,
-                                                    Score_Service: commentData["Score_Service"] as! Double
-                            
-                        );
+                                                 create_UserID: commentData["create_UserID"] as! Int,
+                                                 StoreID: commentData["storeID"] as! Int,
+                                                 Memo: commentData["Memo"] as! String,
+                                                 Score: commentData["Score"] as! Double,
+                                                 Score_Envir: commentData["Score_Envir"] as! Double,
+                                                 Score_Taste: commentData["Score_Taste"] as! Double,
+                                                 Score_Service: commentData["Score_Service"] as! Double
+                                                 );
                         self.commentArray.append(commentObj);
                         
                     }
@@ -68,6 +48,15 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
             
         }
         task.resume()
+        
+        if restaurant.ResImage != nil {
+            let url_restaurant = URL(string: restaurant.ResImage!)
+            let data = try? Data(contentsOf: url_restaurant!)
+            restaurantImage.image = UIImage(data: data!)
+        }
+        
+        title = restaurant.Name
+        AccountData.res_ID = restaurant.ResID
     }
     
     

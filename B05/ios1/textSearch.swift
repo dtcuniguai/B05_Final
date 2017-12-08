@@ -45,7 +45,7 @@ class textSearch: UITableViewController {
         //一般搜尋
         else{
             
-            urlchange = "http://140.136.150.95:3000/search/district?city=\(city)&zone=\(district)&type=\(searchType)&sort="
+            urlchange = "http://140.136.150.95:3000/search/district?city=\(city)&zone=\(district)&type=\(searchType)&sort=\(sort)"
             title = "搜尋"
         }
         
