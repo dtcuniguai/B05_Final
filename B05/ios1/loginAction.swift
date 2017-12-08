@@ -35,17 +35,17 @@ class loginAction :UIViewController, UITextFieldDelegate{
         
         
         if(passwordField.text != "" || accoutField.text != ""){
-           
-            FirebaseAuth.Auth.auth().signIn(withEmail: accoutField.text!, password: passwordField.text!) { (user,error) in
-                if error == nil {
-                    self.userData()
-                    self.signUpMesssage()
-                    
-                }else{
-                    
-                    self.Message(titleText: "Error", messageText: "Error Account Or Password")
-                    self.passwordField.text = "";
-                    
+            
+            self.userData()
+            let _ = Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { (timer) in
+                FirebaseAuth.Auth.auth().signIn(withEmail: self.accoutField.text!, password: self.passwordField.text!) { (user,error) in
+                    if error == nil && AccountData.user_Type == "U"{
+                        self.signUpMesssage()
+                    }else{
+                        self.Message(titleText: "Error", messageText: "Error Account Or Password")
+                        self.passwordField.text = "";
+                        
+                    }
                 }
             }
         }
@@ -78,7 +78,6 @@ class loginAction :UIViewController, UITextFieldDelegate{
                 self.present(main!, animated: false, completion: nil)
             
             alert.dismiss(animated: true, completion: nil)
-            
         }))
         
         self.present(alert, animated: true, completion: nil)

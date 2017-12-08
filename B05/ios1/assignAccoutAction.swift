@@ -207,23 +207,16 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         ScrollView.setContentOffset((CGPoint(x: 0, y: 120)), animated: true)
         
         if (textField == self.sexualityField){
-            
             countRow = sexuality.count
-   
         }
-        
         else if textField == self.career {
-            
             countRow = careerArray.count
-            
         }
         else if textField == self.birthdayYear{
-            
             creatDatePicker()
-        
         }
         else if textField == self.phoneField{
-            
+
         }
         else if textField == self.userNameField {
             

@@ -13,6 +13,7 @@ class orderlistMain: UITableViewController {
     var orderlists:[Orderlist] = []
     
     override func viewDidLoad() {
+        print("///////////HERE////////")
         super.viewDidLoad()
         var urlStr: String = ""
         AccountData.user_ID = 1
