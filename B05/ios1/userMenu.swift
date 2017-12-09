@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+import Firebase
 class userMenu:UITableViewController{
     
     var menuArray = [Menu]()
@@ -19,13 +19,13 @@ class userMenu:UITableViewController{
     var s  = 0
     var flag = 0
     var resID = 0
-    
+    static var stid :Int?
     override func viewDidLoad() {
         super.viewDidLoad()
         print(1)
-        let urlStr = menuUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
-        let url = URL(string:urlStr!)
-        let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+        var urlStr = menuUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
+        var url = URL(string:urlStr!)
+        var task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
                 DispatchQueue.main.async {
                     for menu in dic {
@@ -41,10 +41,10 @@ class userMenu:UITableViewController{
                                            visable:menu["visable"] as! String
                         );
                         self.menuArray.append(SearObj);
-                        
+                        userMenu.stid = SearObj.storeID
                     }
                     if (self.flag == 0){
-                        for i in 0...self.menuArray.count - 1{
+                        for var i in 0...self.menuArray.count - 1{
                             let data = Orderlist(orderID: 0, menuID: self.menuArray[i].menuID, userID: AccountData.user_ID, storeID: 0, total: 0)
                             self.orderArray.append(data)
                         }
@@ -120,6 +120,22 @@ class userMenu:UITableViewController{
             cell.visable = menu.visable
             cell.quota.text = String( orderArray[indexPath.item].total )
             totalPrice = totalPrice + orderArray[indexPath.item].total * menu.price
+            
+            let ss = String(cell.storeID)
+            let mn = String(describing: cell.menuName.text)
+            let databaseRef = Database.database().reference()
+            databaseRef.child("MenuDetail").child(ss).child(mn).observe(DataEventType.value, with:{
+                snapshot in
+                let value = snapshot.value as? [String : AnyObject]
+                let vkey = value?.keys.first
+                 print(vkey)
+                if(vkey != nil){
+                    let vurl = value![vkey!]
+                    let url = URL(string: vurl as! String)
+                    cell.menu_Pic.downloadedFrom(url: url!)                    
+                }
+                
+            })
             return cell
        }
         
@@ -145,7 +161,7 @@ class userMenu:UITableViewController{
     
     
     @IBAction func creatNewOrder(_ sender: Any) {
-        for i in 0...self.menuArray.count - 1{
+        for var i in 0...self.menuArray.count - 1{
             
             if orderArray[i].total != 0 && orderArray[i].orderID != 0 && orderArray[i].menuID != 0 && orderArray[i].userID != 0{
                 let urlStr = "http://140.136.150.95:3000/orderlist/add?orderID=\(orderArray[i].orderID)&menuID=\(orderArray[i].menuID)&userID=\(orderArray[i].userID)&total=\(orderArray[i].total)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
@@ -179,7 +195,7 @@ class userMenu:UITableViewController{
     }
     
     
-    @objc func getUpdateNoti(noti:Notification) {
+    func getUpdateNoti(noti:Notification) {
         //接收編輯頁面回傳的資訊
         orderArray = noti.userInfo!["PASS"] as! [Orderlist]
         
@@ -187,13 +203,13 @@ class userMenu:UITableViewController{
     
     
     func getOrderID()   {
-        let urlStr = "http://140.136.150.95:3000/orderlist/getID".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        let url = URL(string: urlStr!)
-        let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+       var urlStr = "http://140.136.150.95:3000/orderlist/getID".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        var url = URL(string: urlStr!)
+        var task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
                 DispatchQueue.main.async {
                     for comment in dic{
-                            for i in 0...self.menuArray.count - 1{
+                            for var i in 0...self.menuArray.count - 1{
                                 self.orderArray[i].orderID = comment["ID"] as! Int
                             }
                             self.flag = 1
@@ -216,8 +232,8 @@ class userMenuCell:UITableViewCell{
     
     @IBOutlet weak var menuName: UILabel!
     @IBOutlet weak var menuCost: UILabel!
-    @IBOutlet weak var menuLeft: UILabel!
-    
+    @IBOutlet weak var menuLeft: UILabel!    
+    @IBOutlet weak var menu_Pic: UIImageView!
     @IBOutlet weak var quota: UILabel!
     
     var menuID: Int = 0

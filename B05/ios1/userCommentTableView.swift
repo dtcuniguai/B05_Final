@@ -7,11 +7,10 @@
 //
 
 import UIKit
-
+import Firebase
 class userCommentTableView: UITableViewController {
 
     var userCommentArray = [userComment]()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -80,7 +79,21 @@ class userCommentTableView: UITableViewController {
         cell.storeName.text = "\(comment.storeName)"
         cell.storeStar.rating = comment.Score
         
-
+        let ss = String(userCommentArray[indexPath.item].StoreID)
+        let us = String(userCommentArray[indexPath.item].create_UserID)
+        let databaseRef = Database.database().reference()
+        databaseRef.child("comment_Account").child(us).child(ss).observe(DataEventType.value, with:{
+            snapshot in
+            let value = snapshot.value as? [String : AnyObject]
+            let vkey = value?.keys.first
+            if(vkey != nil){
+                let vurl = value![vkey!]
+                let url = URL(string: vurl as! String)
+                cell.image1.downloadedFrom(url: url!)                
+            }
+           
+        })
+        
         return cell
     }
     
@@ -91,7 +104,7 @@ class userCommentTableView: UITableViewController {
             let urlStr = "http:140.136.150.95:3000/comment/delete?commentID=\(userCommentArray[indexPath.row].ID)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
             let url = URL(string: urlStr!)
             let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
-                if let data = data, let _ = String(data: data, encoding: .utf8) {
+                if let data = data, let content = String(data: data, encoding: .utf8) {
                     
                 }
             }

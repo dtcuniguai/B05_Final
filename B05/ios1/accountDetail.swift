@@ -23,10 +23,11 @@ class accountDetail:UIViewController{
     @IBOutlet weak var userNameLable: UILabel!
     @IBOutlet weak var phoneLable: UILabel!
     @IBOutlet weak var sexualityLable: UILabel!
+    @IBOutlet weak var userPic: UIImageView!
     
     var account = ""
     var password = ""
-    
+    static var acc : String?
     
     
     //var userDataArray = [String:String]()
@@ -78,6 +79,22 @@ class accountDetail:UIViewController{
                         self.careerLable.text = self.userDataArray["user_Career"]
                         self.birthDayLable.text = self.userDataArray["user_Month"]! + self.userDataArray["user_Day"]! + self.userDataArray["user_Year"]!
                         self.phoneLable.text = self.userDataArray["user_tel"]
+                        
+                        var  account = self.accountLable.text
+                        accountDetail.acc = account
+                        //var account = "qq@gmail.com"
+                        var str = account?.components(separatedBy: "@")
+                        account = str?[0]
+                        print(account)
+                        databaseRef.child("user").child(account!).observe(DataEventType.value, with:{
+                            snapshot in
+                            let value = snapshot.value as? [String : AnyObject]
+                            let vkey = value?.keys.first
+                            print(vkey)
+                            var vurl = value![vkey!]
+                            let url = URL(string: vurl as! String)
+                            self.userPic.downloadedFrom(url: url!)
+                        })
                     }
                 }
                 
@@ -144,8 +161,26 @@ class accountDetail:UIViewController{
     
     
 }
-
-
+extension UIImageView {
+    func downloadedFrom(url: URL, contentMode mode: UIViewContentMode = .scaleAspectFit) {
+        contentMode = mode
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard
+                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+                let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
+                let data = data, error == nil,
+                let image = UIImage(data: data)
+                else { return }
+            DispatchQueue.main.async() {
+                self.image = image
+            }
+            }.resume()
+    }
+    func downloadedFrom(link: String, contentMode mode: UIViewContentMode = .scaleAspectFit) {
+        guard let url = URL(string: link) else { return }
+        downloadedFrom(url: url, contentMode: mode)
+    }
+}
 
     
 

@@ -7,7 +7,7 @@ import Foundation
 import UIKit
 import Firebase
 
-class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate{
+class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
     
     @IBOutlet weak var ScrollView: UIScrollView!
     //會員帳號(登入用)
@@ -27,7 +27,8 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
     @IBOutlet weak var career: UITextField!
     
     @IBOutlet weak var userPic: UIImageView!
-    
+    let imagePicker = UIImagePickerController()
+    var selectimage : UIImage?
     let refUserData = Database.database().reference().child("Accout")
     
     var sexuality = ["男性","女性","中性"]
@@ -74,12 +75,10 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         career.inputAccessoryView = toolBar
         
         userPic.isUserInteractionEnabled = true
-        let tapGesure = UITapGestureRecognizer(target: self, action: #selector(assignAccoutAction.camera))
+        var tapGesure = UITapGestureRecognizer(target: self, action: "camera")
         self.userPic.addGestureRecognizer(tapGesure)
         
-        
-        
-        
+        imagePicker.delegate = self
     }
     
     //創建新會員並跳至主頁面
@@ -93,6 +92,39 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
                         self.Message(titleText: "錯誤", messageText: "此帳號已有人申請")
                     }else{
                         self.creatUserData()
+                        //////////////////////
+                        let uniqueString = NSUUID().uuidString
+                        var account = self.accountField.text
+                        var str = account?.components(separatedBy: "@")
+                        account = str?[0]
+                        let storageRef = Storage.storage().reference().child("user").child(account!).child("userPic").child("\(uniqueString).png")
+                        if let uploadData = UIImagePNGRepresentation(self.selectimage!) {
+                            // 這行就是 FirebaseStorage 關鍵的存取方法。
+                            storageRef.putData(uploadData, metadata: nil, completion: { (data, error) in
+                                if error != nil {
+                                    // 若有接收到錯誤，我們就直接印在 Console 就好，在這邊就不另外做處理。
+                                    print("Error: \(error!.localizedDescription)")
+                                    return
+                                }
+                                // 連結取得方式就是：data?.downloadURL()?.absoluteString。
+                                if let uploadImageUrl = data?.downloadURL()?.absoluteString {
+                                    // 我們可以 print 出來看看這個連結事不是我們剛剛所上傳的照片。
+                                    print("Photo Url: \(uploadImageUrl)")
+                                    let databaseRef = Database.database().reference().child("user").child(account!).child("userPic")
+                                    
+                                    databaseRef.setValue(uploadImageUrl, withCompletionBlock: { (error, dataRef) in
+                                        if error != nil {
+                                            
+                                            print("Database Error: \(error!.localizedDescription)")
+                                        }
+                                        else {
+                                            print("圖片已儲存")
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                        ////////////////
                     }
                     
                 }
@@ -324,8 +356,24 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         view.endEditing(true)
     }
     
+    @IBAction func loadImageButtomTapped(_ sender: UIButton) {
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .photoLibrary
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        print("OK")
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            userPic.contentMode = .scaleAspectFit
+            userPic.image = pickedImage
+            selectimage = pickedImage
+        }
+        dismiss(animated: true, completion: nil)
+    }
     
-    @objc func camera() {
+    /*
+    func camera() {
         // 建立一個 UIImagePickerController 的實體
         let imagePickerController = UIImagePickerController()
         
@@ -372,7 +420,7 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         
         // 當使用者按下 uploadBtnAction 時會 present 剛剛建立好的三個 UIAlertAction 動作與
         present(imagePickerAlertController, animated: true, completion: nil)
-    }
+    }*/
     
     
 }

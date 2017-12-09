@@ -20,9 +20,9 @@ class orderListView: UITableViewController {
         
         
 
-        let urlStr =    "http://140.136.150.95:3000/orderlist/detail/user?orderID=\(orderID)".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
-        let url = URL(string:urlStr!)
-        let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+        var urlStr =    "http://140.136.150.95:3000/orderlist/detail/user?orderID=\(orderID)".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
+        var url = URL(string:urlStr!)
+        var task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
                 DispatchQueue.main.async {
                     for menu in dic {

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import Firebase
 class orderDetail: UIViewController {
 
     @IBOutlet weak var total: UILabel!
@@ -15,7 +15,7 @@ class orderDetail: UIViewController {
     @IBOutlet weak var number: UILabel!
     @IBOutlet weak var price: UILabel!
     @IBOutlet weak var name: UILabel!
-    
+    @IBOutlet weak var m_Pic: UIImageView!
     var menu = [Menu]()
     var order = [Orderlist]()
     var index = 0
@@ -34,6 +34,21 @@ class orderDetail: UIViewController {
         
         number.layer.borderWidth = 1
         number.layer.borderColor = UIColor.black.cgColor
+        
+        let databaseRef = Database.database().reference()
+        let sd = String(describing: userMenu.stid)
+        let mn = String(describing: name.text)
+        databaseRef.child("MenuDetail").child(sd).child(mn).observe(DataEventType.value, with:{
+            snapshot in
+            let value = snapshot.value as? [String : AnyObject]
+            let vkey = value?.keys.first
+            if(vkey != nil){
+                let vurl = value![vkey!]
+                let url = URL(string: vurl as! String)
+                self.m_Pic.downloadedFrom(url: url!)                
+            }
+            
+        })
         
     }
 

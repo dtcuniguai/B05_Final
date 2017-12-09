@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 import MapKit
-
+import Firebase
 class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var restaurantImage: UIImageView!//餐廳圖片
@@ -17,25 +17,12 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     var restaurant: Restaurant!
     
     var commentArray = [resComment]()
-    
+    static var uid : Int?
+    static var sid : Int?
     override func viewDidLoad() {
         
         addClicker()
         super.viewDidLoad()
-        
-        
-        if restaurant.ResImage != nil {
-            let url_restaurant = URL(string: restaurant.ResImage!)
-            let data = try? Data(contentsOf: url_restaurant!)
-            restaurantImage.image = UIImage(data: data!)
-        }
-        
-        title = restaurant.Name
-        AccountData.res_ID = restaurant.ResID
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
         let urlStr = "http:140.136.150.95:3000/comment/show/store?storeID=\(restaurant.ResID)".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
         let url = URL(string:urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
@@ -44,14 +31,14 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
                     for commentData in dic {
                         
                         let commentObj = resComment(ID: commentData["ID"] as! Int,
-                                                    create_UserID: commentData["create_UserID"] as! Int,
-                                                    StoreID: commentData["storeID"] as! Int,
-                                                    Memo: commentData["Memo"] as! String,
-                                                    Score: commentData["Score"] as! Double,
-                                                    Score_Envir: commentData["Score_Envir"] as! Double,
-                                                    Score_Taste: commentData["Score_Taste"] as! Double,
-                                                    Score_Service: commentData["Score_Service"] as! Double
-                        );
+                                                 create_UserID: commentData["create_UserID"] as! Int,
+                                                 StoreID: commentData["storeID"] as! Int,
+                                                 Memo: commentData["Memo"] as! String,
+                                                 Score: commentData["Score"] as! Double,
+                                                 Score_Envir: commentData["Score_Envir"] as! Double,
+                                                 Score_Taste: commentData["Score_Taste"] as! Double,
+                                                 Score_Service: commentData["Score_Service"] as! Double
+                                                 );
                         self.commentArray.append(commentObj);
                         
                     }
@@ -63,8 +50,16 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         task.resume()
         
+        if restaurant.ResImage != nil {
+            let url_restaurant = URL(string: restaurant.ResImage!)
+            let data = try? Data(contentsOf: url_restaurant!)
+            restaurantImage.image = UIImage(data: data!)
+        }
         
+        title = restaurant.Name
+        AccountData.res_ID = restaurant.ResID
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -127,7 +122,17 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
         cell.commentID.text = "\(comment.create_UserID)"
         cell.commentStar.rating = comment.Score
         
-            
+        let ss = String(comment.StoreID)
+        let us = String(comment.create_UserID)
+        let databaseRef = Database.database().reference()
+        databaseRef.child("comment_Store").child(ss).child(us).observe(DataEventType.value, with:{
+            snapshot in
+            let value = snapshot.value as? [String : AnyObject]
+            let vkey = value?.keys.first
+            let vurl = value![vkey!]
+            let url = URL(string: vurl as! String)
+            cell.commentImage.downloadedFrom(url: url!)
+        })
         
         
         return cell
@@ -166,9 +171,8 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBAction func gotoMap(_ sender: Any) {
         
         let latitude: CLLocationDegrees = restaurant.Res_Y
-        print(restaurant.Res_X)
         let longitude: CLLocationDegrees = restaurant.Res_X
-        print(restaurant.Res_Y)
+        
         let regionDistance:CLLocationDistance = 10000
         let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
         let regionSpan = MKCoordinateRegionMakeWithDistance(coordinates, regionDistance, regionDistance)

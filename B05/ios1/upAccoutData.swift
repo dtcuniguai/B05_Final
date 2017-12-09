@@ -7,16 +7,19 @@
 //
 
 import UIKit
-//import Firebase
+import Firebase
 
-class upAccoutData: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate {
+class upAccoutData: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
     
     @IBOutlet weak var userPic: UIImageView!
     @IBOutlet weak var userNameField: UITextField!
     @IBOutlet weak var careerField: UITextField!
     @IBOutlet weak var phoneField: UITextField!
-    
-    
+    @IBOutlet weak var user_Pic: UIImageView!    
+    let imagePicker = UIImagePickerController()
+    var selectimage : UIImage?
+    var pkey : String?
+    var i = 0
     var userData = ["name":"", "career":"", "phone":""]
     var ID = 0
     //let refUserData = Database.database().reference().child("Accout")
@@ -27,7 +30,7 @@ class upAccoutData: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        imagePicker.delegate = self
         pick.dataSource = self
         pick.delegate = self
         pick.showsSelectionIndicator = true
@@ -49,9 +52,28 @@ class upAccoutData: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource
         careerField.text = userData["career"]
         phoneField.text = userData["phone"]
         
-        
-        
-        
+        print(i)
+        if (i == 0){
+            print("IN")
+            var  account = accountDetail.acc
+            //var account = "qq@gmail.com"
+            var str = account?.components(separatedBy: "@")
+            account = str?[0]
+            print(account)
+            var databaseRef = Database.database().reference()
+            databaseRef.child("user").child(account!).observe(DataEventType.value, with:{
+                snapshot in
+                let value = snapshot.value as? [String : AnyObject]
+                let vkey = value?.keys.first
+                self.pkey = vkey
+                print(vkey)
+                let vurl = value![vkey!]
+                print(vurl)
+                let url = URL(string: vurl as! String)
+                self.user_Pic.downloadedFrom(url: url!)
+            })
+            i = 1 + 1
+        }
         
     }
 
@@ -72,6 +94,54 @@ class upAccoutData: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource
             if let data = data, let content = String(data: data, encoding: .utf8) {
                 
                 if content == "success" {
+                    print("OK")
+                    print(self.pkey)
+                    let uniqueString = NSUUID().uuidString
+                    //var account = self.userNameField.text
+                    var account = "qq@gmail.com"
+                    var str = account.components(separatedBy: "@")
+                    account = str[0]
+                    let storageRef = Storage.storage().reference().child("user").child(account).child("userPic").child("\(uniqueString).png")
+                    if(self.selectimage != nil){
+                        if let uploadData = UIImagePNGRepresentation(self.selectimage!) {
+                            // 這行就是 FirebaseStorage 關鍵的存取方法。
+                            storageRef.putData(uploadData, metadata: nil, completion: { (data, error) in
+                                if error != nil {
+                                    // 若有接收到錯誤，我們就直接印在 Console 就好，在這邊就不另外做處理。
+                                    print("Error: \(error!.localizedDescription)")
+                                    return
+                                }
+                                // 連結取得方式就是：data?.downloadURL()?.absoluteString。
+                                if let uploadImageUrl = data?.downloadURL()?.absoluteString {
+                                    /*
+                                     let imageRef = Database.database().reference().child("user").child(account)
+                                     imageRef.child("userPic").removeValue(completionBlock: { (error, refer) in
+                                     if error != nil {
+                                     print("失敗")
+                                     } else {
+                                     print(refer)
+                                     print("刪除成功")
+                                     //self.viewDidLoad();
+                                     }
+                                     })*/
+                                    
+                                    print("Photo Url: \(uploadImageUrl)")
+                                    let databaseRef = Database.database().reference().child("user").child(account).child("userPic")
+                                    
+                                    databaseRef.setValue(uploadImageUrl, withCompletionBlock: { (error, dataRef) in
+                                        if error != nil {
+                                            print("Database Error: \(error!.localizedDescription)")
+                                        }
+                                        else {
+                                            print("圖片已儲存")
+                                        }
+                                    })
+                                }
+                            })
+                            
+                        }
+                        
+                    }
                     
                     /////創建成功訊息\\\\\\
                     let alert = UIAlertController(title: "更新訊息", message: "更新成功", preferredStyle: .alert)
@@ -147,6 +217,23 @@ class upAccoutData: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource
     @objc func donePressd() {
         
         view.endEditing(true)
+    }
+    
+    @IBAction func changePic(_ sender: Any) {
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .photoLibrary
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        print("OK")
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            user_Pic.contentMode = .scaleAspectFit
+            user_Pic.image = pickedImage
+            selectimage = pickedImage
+            
+        }
+        dismiss(animated: true, completion: nil)
     }
     
     

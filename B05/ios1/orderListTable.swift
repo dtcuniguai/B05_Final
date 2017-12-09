@@ -15,9 +15,9 @@ class orderListTable: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let urlStr = "http://140.136.150.95:3000/orderlist/show/user?ID=\(AccountData.user_ID)".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
-        let url = URL(string:urlStr!)
-        let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+        var urlStr = "http://140.136.150.95:3000/orderlist/show/user?ID=\(AccountData.user_ID)".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
+        var url = URL(string:urlStr!)
+        var task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
                 DispatchQueue.main.async {
                     for menu in dic {

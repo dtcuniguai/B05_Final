@@ -7,8 +7,8 @@
 //
 
 import UIKit
-
-class accountComment: UIViewController, UITextFieldDelegate, UITextViewDelegate {
+import Firebase
+class accountComment: UIViewController, UITextFieldDelegate, UITextViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIPickerViewDelegate{
 
     
     
@@ -19,15 +19,17 @@ class accountComment: UIViewController, UITextFieldDelegate, UITextViewDelegate 
     @IBOutlet weak var envirStar: CosmosView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var image: UIImageView!
-    
+    let imagePicker = UIImagePickerController()
+    var selectimage : UIImage?
     @IBOutlet weak var textView: UITextView!
     
-    var commentID = 0
     
+    var commentID = 0
+    var Ok = 0
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
+        imagePicker.delegate = self
         ////取得commentID\\\\\
         let urlStr = "http://140.136.150.95:3000/comment/getID".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let url = URL(string: urlStr!)
@@ -85,16 +87,65 @@ class accountComment: UIViewController, UITextFieldDelegate, UITextViewDelegate 
             if let data = data, let content = String(data: data, encoding: .utf8) {
                 print(content)
                 if content == "success" {
-                    let alert = UIAlertController(title: "評論", message: "新增成功", preferredStyle: .alert)
-                    
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {  (action) in
+                    ///////
+                    let uniqueString = NSUUID().uuidString
+                    let account = AccountData.user_ID
+                    let store = AccountData.res_ID
+                    let storageRef1 = Storage.storage().reference().child("comment_Account").child(String(account)).child(String(store)).child("\(uniqueString).png")
+                    let storageRef2 = Storage.storage().reference().child("comment_Store").child(String(store)).child(String(account)).child("\(uniqueString).png")
+                    if let uploadData = UIImagePNGRepresentation(self.selectimage!) {
+                        storageRef1.putData(uploadData, metadata: nil, completion: { (data, error) in
+                            if error != nil {
+                                print("Error: \(error!.localizedDescription)")
+                                return
+                            }
+                            if let uploadImageUrl = data?.downloadURL()?.absoluteString {
+                                print("Photo Url: \(uploadImageUrl)")
+                                let databaseRef = Database.database().reference().child("comment_Account").child(String(account)).child(String(store)).child(uniqueString)
+                                databaseRef.setValue(uploadImageUrl, withCompletionBlock: { (error, dataRef) in
+                                    if error != nil {
+                                        print("Database Error: \(error!.localizedDescription)")
+                                    }
+                                    else {
+                                        print("圖片已儲存")
+                                    }
+                                })
+                            }
+                        })
+                        storageRef2.putData(uploadData, metadata: nil, completion: { (data, error) in
+                            if error != nil {
+                                print("Error: \(error!.localizedDescription)")
+                                return
+                            }
+                            if let uploadImageUrl = data?.downloadURL()?.absoluteString {
+                                print("Photo Url: \(uploadImageUrl)")
+                                let databaseRef = Database.database().reference().child("comment_Store").child(String(store)).child(String(account)).child(uniqueString)
+                                databaseRef.setValue(uploadImageUrl, withCompletionBlock: { (error, dataRef) in
+                                    if error != nil {
+                                        print("Database Error: \(error!.localizedDescription)")
+                                    }
+                                    else {
+                                        print("圖片已儲存")
+                                        self.Ok = 1
+                                    }
+                                })
+                            }
+                        })
+                    }
+                    ///////
+                    if(self.Ok==1){
+                        let alert = UIAlertController(title: "評論", message: "新增成功", preferredStyle: .alert)
                         
-                        self.navigationController?.popViewController(animated: true)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: {  (action) in
+                            
+                            self.navigationController?.popViewController(animated: true)
+                            
+                            alert.dismiss(animated: true, completion: nil)
+                        }))
                         
-                        alert.dismiss(animated: true, completion: nil)
-                    }))
+                        self.present(alert, animated: true, completion: nil)
+                    }
                     
-                    self.present(alert, animated: true, completion: nil)
                 }
                 else{
                     //print("error")
@@ -121,11 +172,21 @@ class accountComment: UIViewController, UITextFieldDelegate, UITextViewDelegate 
         
     }
     
+    @IBAction func choosePic(_ sender: UIButton) {
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .photoLibrary
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        print("OK")
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            image.contentMode = .scaleAspectFit
+            image.image = pickedImage
+            selectimage = pickedImage
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
     
-    
-    
-    
-    
-    
-
 }

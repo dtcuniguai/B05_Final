@@ -32,9 +32,8 @@ class map: UIViewController, MKMapViewDelegate,CLLocationManagerDelegate {
         
         let GPS  = CLLocationManager()
         userGPS_y = (GPS.location?.coordinate.latitude)!
-        print(userGPS_y)
         userGPS_x = (GPS.location?.coordinate.longitude)!
-        print(userGPS_x)
+        
         if CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
             var resPinArray = [pinMapAnnotation]()
             
@@ -139,7 +138,7 @@ class map: UIViewController, MKMapViewDelegate,CLLocationManagerDelegate {
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView,
                  calloutAccessoryControlTapped control: UIControl) {
         
-        for i in 0...res.count {
+        for var  i in 0...res.count {
             if (view.annotation?.title)! == res[i].Name {
                 range = i
                 print(range)
