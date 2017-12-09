@@ -21,7 +21,6 @@
 		0EB497831F8A9C7F0063FEDF /* accountDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB497821F8A9C7F0063FEDF /* accountDetail.swift */; };
 		0EB497851F8AA33D0063FEDF /* pickerBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EB497841F8AA33D0063FEDF /* pickerBlock.swift */; };
 		5710845ACC7EC2F39AA3B197 /* Pods_ios1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF90FB047409F44B6A0DB2D6 /* Pods_ios1.framework */; };
-		DEA5C7D31F8BAF23003BC64F /* camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA5C7D21F8BAF23003BC64F /* camera.swift */; };
 		DEA5C7D51F8BB202003BC64F /* map.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA5C7D41F8BB202003BC64F /* map.swift */; };
 		DEA5C7DF1F8BD546003BC64F /* textSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA5C7DE1F8BD546003BC64F /* textSearch.swift */; };
 		DEF586531F8C9E170053D715 /* restaurantDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF586521F8C9E170053D715 /* restaurantDetail.swift */; };
@@ -59,7 +58,6 @@
 		0EB497841F8AA33D0063FEDF /* pickerBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pickerBlock.swift; sourceTree = "<group>"; };
 		378687EB4D9D4F3D17028ED3 /* Pods-ios1.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ios1.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ios1/Pods-ios1.debug.xcconfig"; sourceTree = "<group>"; };
 		CF90FB047409F44B6A0DB2D6 /* Pods_ios1.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ios1.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DEA5C7D21F8BAF23003BC64F /* camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = camera.swift; sourceTree = "<group>"; };
 		DEA5C7D41F8BB202003BC64F /* map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = map.swift; sourceTree = "<group>"; };
 		DEA5C7DE1F8BD546003BC64F /* textSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textSearch.swift; sourceTree = "<group>"; };
 		DEF586521F8C9E170053D715 /* restaurantDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = restaurantDetail.swift; sourceTree = "<group>"; };
@@ -122,7 +120,6 @@
 				FEC080081F965433002981B3 /* upAccoutData.swift */,
 				0E2810021F619C8E00B62A84 /* assignAccoutAction.swift */,
 				DEA5C7D41F8BB202003BC64F /* map.swift */,
-				DEA5C7D21F8BAF23003BC64F /* camera.swift */,
 				0E28100E1F752C2800B62A84 /* mainMenu.swift */,
 				0E3709831FC020C0006385E0 /* userMenu.swift */,
 				FEFC3EE01FD6C185006F5072 /* orderDetail.swift */,
@@ -195,7 +192,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0910;
 				ORGANIZATIONNAME = Niguai;
 				TargetAttributes = {
 					0E280FE71F61911500B62A84 = {
@@ -292,7 +289,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE76AAEB1FB70345009F4E7E /* commentDetail.swift in Sources */,
-				DEA5C7D31F8BAF23003BC64F /* camera.swift in Sources */,
 				DEA5C7DF1F8BD546003BC64F /* textSearch.swift in Sources */,
 				FE5DC5FD1FB7284B005DF53C /* userShowComment.swift in Sources */,
 				0E280FEE1F61911500B62A84 /* loginAction.swift in Sources */,
@@ -311,7 +307,6 @@
 				FE76AAF11FB7198F009F4E7E /* userCommentCell.swift in Sources */,
 				DEA5C7D51F8BB202003BC64F /* map.swift in Sources */,
 				DEF586531F8C9E170053D715 /* restaurantDetail.swift in Sources */,
-				DEF586551F8CA5320053D715 /* restaurantDetailCell.swift in Sources */,
 				FE9BAE011FD9EF00001679EB /* orderListView.swift in Sources */,
 				FEC080091F965433002981B3 /* upAccoutData.swift in Sources */,
 				0E3709841FC020C0006385E0 /* userMenu.swift in Sources */,
@@ -442,7 +437,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -479,7 +474,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Niguai.ios1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 			};

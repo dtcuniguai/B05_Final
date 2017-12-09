@@ -91,7 +91,7 @@ class userCommentTableView: UITableViewController {
             let urlStr = "http:140.136.150.95:3000/comment/delete?commentID=\(userCommentArray[indexPath.row].ID)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
             let url = URL(string: urlStr!)
             let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
-                if let data = data, let content = String(data: data, encoding: .utf8) {
+                if let data = data, let _ = String(data: data, encoding: .utf8) {
                     
                 }
             }
