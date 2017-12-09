@@ -159,6 +159,7 @@ class mainMenu:  UIViewController, UITableViewDelegate, UITableViewDataSource {
  Return: type of Cell
  */
 class hotSearchCell:UITableViewCell{
+    
     @IBOutlet weak var resImg: UIImageView!
     @IBOutlet weak var resName: UILabel!
     @IBOutlet weak var resType: UILabel!
