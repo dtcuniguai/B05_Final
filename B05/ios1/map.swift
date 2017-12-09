@@ -138,7 +138,7 @@ class map: UIViewController, MKMapViewDelegate,CLLocationManagerDelegate {
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView,
                  calloutAccessoryControlTapped control: UIControl) {
         
-        for var  i in 0...res.count {
+        for i in 0...res.count {
             if (view.annotation?.title)! == res[i].Name {
                 range = i
                 print(range)

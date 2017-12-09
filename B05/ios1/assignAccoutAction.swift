@@ -74,7 +74,7 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
         career.inputAccessoryView = toolBar
         
         userPic.isUserInteractionEnabled = true
-        var tapGesure = UITapGestureRecognizer(target: self, action: "camera")
+        let tapGesure = UITapGestureRecognizer(target: self, action: #selector(assignAccoutAction.camera))
         self.userPic.addGestureRecognizer(tapGesure)
         
         
@@ -325,7 +325,7 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
     }
     
     
-    func camera() {
+    @objc func camera() {
         // 建立一個 UIImagePickerController 的實體
         let imagePickerController = UIImagePickerController()
         

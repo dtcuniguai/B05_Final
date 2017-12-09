@@ -23,9 +23,9 @@ class userMenu:UITableViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         print(1)
-        var urlStr = menuUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
-        var url = URL(string:urlStr!)
-        var task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+        let urlStr = menuUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
+        let url = URL(string:urlStr!)
+        let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
                 DispatchQueue.main.async {
                     for menu in dic {
@@ -44,7 +44,7 @@ class userMenu:UITableViewController{
                         
                     }
                     if (self.flag == 0){
-                        for var i in 0...self.menuArray.count - 1{
+                        for i in 0...self.menuArray.count - 1{
                             let data = Orderlist(orderID: 0, menuID: self.menuArray[i].menuID, userID: AccountData.user_ID, storeID: 0, total: 0)
                             self.orderArray.append(data)
                         }
@@ -145,7 +145,7 @@ class userMenu:UITableViewController{
     
     
     @IBAction func creatNewOrder(_ sender: Any) {
-        for var i in 0...self.menuArray.count - 1{
+        for i in 0...self.menuArray.count - 1{
             
             if orderArray[i].total != 0 && orderArray[i].orderID != 0 && orderArray[i].menuID != 0 && orderArray[i].userID != 0{
                 let urlStr = "http://140.136.150.95:3000/orderlist/add?orderID=\(orderArray[i].orderID)&menuID=\(orderArray[i].menuID)&userID=\(orderArray[i].userID)&total=\(orderArray[i].total)".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
@@ -179,7 +179,7 @@ class userMenu:UITableViewController{
     }
     
     
-    func getUpdateNoti(noti:Notification) {
+    @objc func getUpdateNoti(noti:Notification) {
         //接收編輯頁面回傳的資訊
         orderArray = noti.userInfo!["PASS"] as! [Orderlist]
         
@@ -187,13 +187,13 @@ class userMenu:UITableViewController{
     
     
     func getOrderID()   {
-       var urlStr = "http://140.136.150.95:3000/orderlist/getID".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        var url = URL(string: urlStr!)
-        var task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+        let urlStr = "http://140.136.150.95:3000/orderlist/getID".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let url = URL(string: urlStr!)
+        let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
                 DispatchQueue.main.async {
                     for comment in dic{
-                            for var i in 0...self.menuArray.count - 1{
+                            for i in 0...self.menuArray.count - 1{
                                 self.orderArray[i].orderID = comment["ID"] as! Int
                             }
                             self.flag = 1
