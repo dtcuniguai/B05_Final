@@ -32,8 +32,9 @@ class map: UIViewController, MKMapViewDelegate,CLLocationManagerDelegate {
         
         let GPS  = CLLocationManager()
         userGPS_y = (GPS.location?.coordinate.latitude)!
+        print(userGPS_y)
         userGPS_x = (GPS.location?.coordinate.longitude)!
-        
+        print(userGPS_x)
         if CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
             var resPinArray = [pinMapAnnotation]()
             
