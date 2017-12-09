@@ -160,8 +160,9 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBAction func gotoMap(_ sender: Any) {
         
         let latitude: CLLocationDegrees = restaurant.Res_Y
+        print(restaurant.Res_X)
         let longitude: CLLocationDegrees = restaurant.Res_X
-        
+        print(restaurant.Res_Y)
         let regionDistance:CLLocationDistance = 10000
         let coordinates = CLLocationCoordinate2DMake(latitude, longitude)
         let regionSpan = MKCoordinateRegionMakeWithDistance(coordinates, regionDistance, regionDistance)
