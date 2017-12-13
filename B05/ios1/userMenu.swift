@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 import UIKit
 
 class userMenu:UITableViewController{
@@ -176,8 +177,20 @@ class userMenu:UITableViewController{
                 self.present(alert, animated: true, completion: nil)
             }
         }
+        addOrderNotice()
     }
     
+    
+    func addOrderNotice(){
+        var orderNum:Int = 0;
+        var ref: DatabaseReference!
+        //ref = Database.database().reference(withPath: "orderNotice/"+String(storeID) );
+        ref.observe(.value) { (dataSnapshot:DataSnapshot) in
+            let value = dataSnapshot.value as? NSNumber
+            orderNum = value as! Int
+            
+        };
+    }
     
     @objc func getUpdateNoti(noti:Notification) {
         //接收編輯頁面回傳的資訊

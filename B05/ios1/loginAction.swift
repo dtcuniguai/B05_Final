@@ -3,7 +3,6 @@
 // Action:會員登入，創建會員
 //First Write By Niguai
 
-
 import Foundation
 import UIKit
 import Firebase
@@ -12,21 +11,17 @@ class loginAction :UIViewController, UITextFieldDelegate{
     
     //password
     @IBOutlet weak var passwordField: UITextField!
-    
     //login Email
     @IBOutlet weak var accoutField: UITextField!
     
     
     override func viewDidLoad() {
-        //For Test
         title = "登入"
         self.accoutField.delegate = self
         self.passwordField.delegate = self
         passwordField.isSecureTextEntry = true
-        accoutField.text = "ex@gmail.com"
+        accoutField.text = "yui@gmail.com"
         passwordField.text = "12345678"
-        
-        
     }
     
     

@@ -1,19 +1,12 @@
-//
-//  BasicItem.swift
-//  ios1
-//
-//  Created by 李季耕 on 2017/9/10.
-//  Copyright © 2017年 Niguai. All rights reserved.
-//
-
 import Foundation
 import UIKit
 import MapKit
 
-
-    
+/*
+ 餐廳用結構
+ Coder:Niguai
+ */
 struct Restaurant{
-    
     var ResID:Int//餐廳ID
     var Name:String//餐廳名稱
     var ResType:String//餐廳類別
@@ -24,12 +17,13 @@ struct Restaurant{
     var ResInfo:String//餐廳簡介
     var Res_X:Double//餐廳X軸
     var Res_Y:Double//餐廳Y軸
-        
 }
-    
 
 
-
+/*
+評論用結構
+Coder: Set
+*/
 struct resComment{
     var ID:Int//評論ID
     var create_UserID:Int//評論人ID
@@ -39,14 +33,12 @@ struct resComment{
     var Score_Envir:Double//環境評分
     var Score_Taste:Double//味道評分
     var Score_Service:Double//服務評分
-    //var store_Reply: String//店家回覆
 }
 
-// Struct For All restaurant
-// TODO:add new element with restaurant "ID" (not done yet)
-// Code by Niguai
-// last Update by : Niguai
-
+/*
+餐廳用結構
+Coder:Niguai
+*/
 struct userComment{
     var ID:Int//評論ID
     var create_UserID:Int//評論人ID
@@ -57,19 +49,14 @@ struct userComment{
     var Score_Envir:Double//環境評分
     var Score_Taste:Double//味道評分
     var Score_Service:Double//服務評分
-    //var store_Reply: String//店家回覆
-    
 }
 
 
-    
-
-
-// Struct For Login Account (Global)
-// Code by Niguai
-// last Update by : Niguai
+/*
+會員基本資料用結構
+Coder:Niguai
+*/
 struct AccountData {
-    
     static var user_ID:Int = 0
     static var user_Account:String = ""
     static var user_Password:String = ""
@@ -83,10 +70,7 @@ struct AccountData {
     static var user_Tel:String = ""
     static var user_Pic:String = ""
     static var res_ID: Int = 0
-    
-    
 }
-
 
 
 // Struct For ?
@@ -106,11 +90,11 @@ class pinMapAnnotation: NSObject, MKAnnotation{
 }
 
 
-// Struct For All menu
-// Code by Niguai
-// last Update by : Niguai
+/*
+菜單用結構
+Coder:Niguai
+*/
 struct Menu {
-    
     var menuID: Int
     var storeID: Int
     var name: String
@@ -125,27 +109,35 @@ struct Menu {
 }
 
 
-// Struct For All orderlist
-// Code by Set
+/*
+FUNCTION ?
+Coder:?
+*/
 struct Orderlist {
-    
     var orderID: Int
     var menuID: Int
     var userID: Int
     var storeID: Int
     var total : Int
-    
 }
 
+
+/*
+ FUNCTION ?
+ Coder:?
+ */
 struct OrderlistTable {
-    
     var orderID: Int
     var total: Int
     var pay_Time: String
     var Name:String
-    
 }
 
+
+/*
+ FUNCTION ?
+ Coder:?
+ */
 struct OrderlistView {
     var name: String
     var number: Int

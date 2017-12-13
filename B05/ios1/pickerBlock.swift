@@ -188,11 +188,11 @@ class pickerBlock:UIViewController,UIPickerViewDelegate, UIPickerViewDataSource,
         
         if  statusStr == "D"{
             if cityTextField.text == "台北市" {
-                var titleRow = 台北市[row]
+                let titleRow = 台北市[row]
                 return titleRow
             }
             else if cityTextField.text == "新北市" {
-                var titleRow = 新北市[row]
+                let titleRow = 新北市[row]
                 return titleRow
             }
             else if cityTextField.text == "桃園市" {
