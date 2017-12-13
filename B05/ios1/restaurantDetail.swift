@@ -16,14 +16,12 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var restaurantDetailTable: UITableView!//餐廳資料的table
     var restaurant: Restaurant!
     
-    var commentArray = [resComment]()
+    var commentArray = [Comment]()
     
     override func viewDidLoad() {
         
         addClicker()
         super.viewDidLoad()
-        
-        
         if restaurant.ResImage != nil {
             let url_restaurant = URL(string: restaurant.ResImage!)
             let data = try? Data(contentsOf: url_restaurant!)
@@ -36,6 +34,8 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     override func viewWillAppear(_ animated: Bool) {
         
+        commentArray.removeAll()
+        restaurantDetailTable.reloadData()
         let urlStr = "http:140.136.150.95:3000/comment/show/store?storeID=\(restaurant.ResID)".addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
         let url = URL(string:urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
@@ -43,14 +43,17 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
                 DispatchQueue.main.async {
                     for commentData in dic {
                         
-                        let commentObj = resComment(ID: commentData["ID"] as! Int,
+                        let commentObj = Comment(ID: commentData["ID"] as! Int,
                                                     create_UserID: commentData["create_UserID"] as! Int,
                                                     StoreID: commentData["storeID"] as! Int,
+                                                    storeName: " ",
+                                                    userName: commentData["user_Name"] as! String,
                                                     Memo: commentData["Memo"] as! String,
                                                     Score: commentData["Score"] as! Double,
                                                     Score_Envir: commentData["Score_Envir"] as! Double,
                                                     Score_Taste: commentData["Score_Taste"] as! Double,
-                                                    Score_Service: commentData["Score_Service"] as! Double
+                                                    Score_Service: commentData["Score_Service"] as! Double,
+                                                    store_Reply: ""
                         );
                         self.commentArray.append(commentObj);
                         
@@ -65,6 +68,8 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         
     }
+
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -124,7 +129,7 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         let comment = commentArray[indexPath.item - 6]
         let cell = restaurantDetailTable.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as! commentCell
-        cell.commentID.text = "\(comment.create_UserID)"
+        cell.commentID.text = "\(comment.userName)"
         cell.commentStar.rating = comment.Score
         
             
@@ -157,6 +162,7 @@ class restaurantDetail: UIViewController, UITableViewDelegate, UITableViewDataSo
             let destinationController = segue.destination as! userMenu
             destinationController.resID = restaurant.ResID
         }
+        
     }
     
     

@@ -18,7 +18,7 @@ class commentDetail: UIViewController {
     
     @IBOutlet weak var memoLable: UILabel!
     
-    var commentData: resComment!
+    var commentData: Comment!
     
     
     override func viewDidLoad() {

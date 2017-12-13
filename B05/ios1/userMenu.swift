@@ -14,19 +14,19 @@ class userMenu:UITableViewController{
     
     var menuArray = [Menu]()
     var orderArray = [Orderlist]()
-    var menuUrl =  "http://140.136.150.95:3000/menu/detail/store?storeID=14";
     var index = 0;
     var totalPrice = 0
     var s  = 0
     var flag = 0
     var resID = 0
+    var menuUrl = "";
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(1)
-        let urlStr = menuUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
-        let url = URL(string:urlStr!)
-        let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
+        menuUrl = "http://140.136.150.95:3000/menu/detail/store?storeID=\(resID)"
+        var urlStr = menuUrl.addingPercentEncoding(withAllowedCharacters:.urlQueryAllowed)
+        var url = URL(string:urlStr!)
+        var task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
                 DispatchQueue.main.async {
                     for menu in dic {
@@ -44,8 +44,8 @@ class userMenu:UITableViewController{
                         self.menuArray.append(SearObj);
                         
                     }
-                    if (self.flag == 0){
-                        for i in 0...self.menuArray.count - 1{
+                    if (self.flag == 0 && self.menuArray.count != 0){
+                        for var i in 0...self.menuArray.count - 1{
                             let data = Orderlist(orderID: 0, menuID: self.menuArray[i].menuID, userID: AccountData.user_ID, storeID: 0, total: 0)
                             self.orderArray.append(data)
                         }
@@ -106,6 +106,9 @@ class userMenu:UITableViewController{
         let cell =  tableView.dequeueReusableCell(withIdentifier: "orderCell" ) as! orderActionCell
         
         cell.total.text = String(totalPrice)
+        if menuArray.count == 0{
+            cell.Hit.isHidden = true
+        }
         if indexPath.item < menuArray.count  {
             let menu = menuArray[indexPath.item]
             let cell = tableView.dequeueReusableCell(withIdentifier: "userMenuCell") as! userMenuCell;
@@ -206,10 +209,12 @@ class userMenu:UITableViewController{
             if let data = data, let dic = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [[String:Any]]{
                 DispatchQueue.main.async {
                     for comment in dic{
-                            for i in 0...self.menuArray.count - 1{
+                        if (self.flag == 0 && self.menuArray.count != 0){
+                            for var i in 0...self.menuArray.count - 1{
                                 self.orderArray[i].orderID = comment["ID"] as! Int
                             }
                             self.flag = 1
+                        }
                     }
                     
                 }
@@ -258,6 +263,7 @@ class userMenuCell:UITableViewCell{
 class orderActionCell:UITableViewCell{
     
     
+    @IBOutlet weak var Hit: UIButton!
     @IBOutlet weak var total: UILabel!
     
     override func setSelected(_ selected: Bool, animated: Bool) {

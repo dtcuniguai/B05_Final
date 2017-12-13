@@ -21,7 +21,7 @@ class userShowComment: UIViewController, UITextViewDelegate {
     @IBOutlet weak var envirStar: CosmosView!
     @IBOutlet weak var store_ReplyLable: UILabel!
     
-    var showCommentDataArray: userComment!
+    var showCommentDataArray: Comment!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +31,7 @@ class userShowComment: UIViewController, UITextViewDelegate {
         envirStar.rating = showCommentDataArray.Score_Envir
         serviceStar.rating = showCommentDataArray.Score_Service
         tasteStar.rating = showCommentDataArray.Score_Taste
-        //store_ReplyLable.text = showCommentDataArray.Memo
+        store_ReplyLable.text = showCommentDataArray.store_Reply
         
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
@@ -43,6 +43,9 @@ class userShowComment: UIViewController, UITextViewDelegate {
         
         memoTextView.layer.borderWidth = 1
         memoTextView.layer.borderColor = UIColor.black.cgColor
+        
+        store_ReplyLable.layer.borderWidth = 1
+        store_ReplyLable.layer.borderColor = UIColor.black.cgColor
         
         
     }

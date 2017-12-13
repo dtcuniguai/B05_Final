@@ -20,6 +20,7 @@ class loginAction :UIViewController, UITextFieldDelegate{
         self.accoutField.delegate = self
         self.passwordField.delegate = self
         passwordField.isSecureTextEntry = true
+
         accoutField.text = "yui@gmail.com"
         passwordField.text = "12345678"
     }

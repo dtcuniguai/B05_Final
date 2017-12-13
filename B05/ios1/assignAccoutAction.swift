@@ -132,7 +132,7 @@ class assignAccoutAction :UIViewController,UIPickerViewDelegate,UIPickerViewData
             AccountData.user_Gender = "G"
         }
         
-        let urlStr = "http://140.136.150.95:3000/user/register?account=\(accountField.text!)&password=\(passwordField.text!)&userType=\("U")&name=\(userNameField.text!)&gender=\(AccountData.user_Gender)&career=\(career.text!)&month=\(birthday[1])&day=\(birthday[0])&year=\(birthday[2])&phone=\(phoneField.text!)&userPic=".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        let urlStr = "http://140.136.150.95:3000/user/user/register?account=\(accountField.text!)&password=\(passwordField.text!)&userType=\("U")&name=\(userNameField.text!)&gender=\(AccountData.user_Gender)&career=\(career.text!)&month=\(birthday[1])&day=\(birthday[0])&year=\(birthday[2])&phone=\(phoneField.text!)&userPic=".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let url = URL(string: urlStr!)
         let task = URLSession.shared.dataTask(with: url!) { (data, response , error) in
             if let data = data, let content = String(data: data, encoding: .utf8) {
