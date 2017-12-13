@@ -558,6 +558,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="Hit" destination="ECJ-gh-wsv" id="sTr-3R-2KF"/>
                                     <outlet property="total" destination="C2u-MG-chR" id="9o6-sC-jXg"/>
                                 </connections>
                             </tableViewCell>

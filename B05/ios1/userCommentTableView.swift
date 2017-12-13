@@ -10,7 +10,7 @@ import UIKit
 
 class userCommentTableView: UITableViewController {
 
-    var userCommentArray = [userComment]()
+    var userCommentArray = [Comment]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,15 +31,17 @@ class userCommentTableView: UITableViewController {
                 DispatchQueue.main.async {
                     for commentData in dic {
                         
-                        let commentObj = userComment(ID: commentData["ID"] as! Int,
+                        let commentObj = Comment(ID: commentData["ID"] as! Int,
                                                      create_UserID: commentData["create_UserID"] as! Int,
                                                      StoreID: commentData["storeID"] as! Int,
                                                      storeName: commentData["Name"] as! String,
+                                                     userName: " ",
                                                      Memo: commentData["Memo"] as! String,
                                                      Score: commentData["Score"] as! Double,
                                                      Score_Envir: commentData["Score_Envir"] as! Double,
                                                      Score_Taste: commentData["Score_Taste"] as! Double,
-                                                     Score_Service: commentData["Score_Service"] as! Double
+                                                     Score_Service: commentData["Score_Service"] as! Double,
+                                                     store_Reply: commentData["store_Reply"] as! String
                             
                         );
                         self.userCommentArray.append(commentObj);
